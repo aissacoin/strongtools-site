@@ -5,12 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StrongTools | Premium Digital Utility Archive</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <script>
-        // FIX 1: Global Variables
+        // تعريف الألوان
         window.CATEGORY_COLORS = {
             security: '#3b82f6',
             utility: '#10b981',
@@ -19,13 +15,21 @@
             design: '#ec4899'
         };
 
-        // FIX 2: Global Function (getCycleSeed)
-        // This generates a unique number based on the date to prevent the ReferenceError
+        // تعريف الدالة المفقودة getCycleSeed
         window.getCycleSeed = function() {
-            const now = new Date();
-            return now.getFullYear() + (now.getMonth() + 1) + now.getDate();
+            try {
+                const now = new Date();
+                return now.getFullYear() + (now.getMonth() + 1) + now.getDate();
+            } catch (e) {
+                return Math.floor(Math.random() * 1000);
+            }
         };
+    </script>
 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -34,13 +38,9 @@
             }
         }
     </script>
+    
     <style>
-        body { 
-            background-color: #050505; 
-            color: white; 
-            margin: 0; 
-            font-family: system-ui, -apple-system, sans-serif;
-        }
+        body { background-color: #050505; color: white; margin: 0; font-family: system-ui, sans-serif; }
         #root { min-height: 100vh; }
     </style>
 </head>
@@ -50,7 +50,8 @@
     <script type="module" src="/index.tsx"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        // تشغيل الأيقونات بعد تحميل الصفحة
+        window.addEventListener('load', () => {
             if (window.lucide) {
                 lucide.createIcons();
             }
