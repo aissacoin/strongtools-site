@@ -6,9 +6,8 @@ import legacy from '@vitejs/plugin-legacy';
 export default defineConfig({
   root: process.cwd(),
   
-  // IMPORTANT: Change './' to your repository name for GitHub Pages
-  // Example: if your repo is "strong-tools", use '/strong-tools/'
-  base: './', 
+  // FIXED: Adjusted base for the repository "strongtools-site"
+  base: '/strongtools-site/', 
 
   plugins: [
     react(),
