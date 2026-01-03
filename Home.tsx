@@ -2,7 +2,7 @@
 import React from 'react';
 import { TOOLS, NAV_LINKS } from './constants';
 import { getAutomatedArchive } from "./geminiService";
-import { ToolModal } from '../components/ToolModal';
+import { ToolModal } from "./ToolModal";
 import { BMICalculator } from '../components/tools/BMICalculator';
 import { WordCounter } from '../components/tools/WordCounter';
 import { WeatherLive } from '../components/tools/WeatherLive';
