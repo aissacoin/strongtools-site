@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { X, Sparkles, Loader2, ShieldCheck, ScrollText, AlertTriangle, History, RefreshCw, Bookmark } from 'lucide-react';
-import { getAutomatedArchive, ArchivalRecord } from '../services/geminiService';
-
+import { getAutomatedArchive, ArchivalRecord } from "./geminiService";
 interface ToolModalProps {
   isOpen: boolean;
   onClose: () => void;
