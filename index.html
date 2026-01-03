@@ -10,6 +10,15 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
+        // FIX 1: Define CATEGORY_COLORS here so it's available globally before scripts run
+        window.CATEGORY_COLORS = {
+            security: '#3b82f6',
+            utility: '#10b981',
+            coding: '#8b5cf6',
+            web: '#f59e0b',
+            design: '#ec4899'
+        };
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -31,12 +40,15 @@
 <body>
     <div id="root"></div>
     
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 
     <script>
-      if (window.lucide) {
-        lucide.createIcons();
-      }
+        // Delay icon creation to ensure DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
     </script>
 </body>
 </html>
