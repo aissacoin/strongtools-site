@@ -11,9 +11,13 @@ import { Privacy } from './Privacy';
 import { Terms } from './Terms';
 
 export const App: React.FC = () => {
-  // Use a safe initial state for the hash
+  // Use a safe initial state for the hash to prevent rendering issues on load
   const [currentHash, setCurrentHash] = React.useState(() => {
-    return typeof window !== 'undefined' ? window.location.hash || '#/' : '#/';
+    try {
+      return typeof window !== 'undefined' ? window.location.hash || '#/' : '#/';
+    } catch (e) {
+      return '#/';
+    }
   });
 
   React.useEffect(() => {
@@ -27,7 +31,11 @@ export const App: React.FC = () => {
     const handleHashChange = () => {
       setCurrentHash(window.location.hash || '#/');
       // Safe scroll to top for older browsers
-      window.scrollTo(0, 0);
+      try {
+        window.scrollTo(0, 0);
+      } catch (e) {
+        document.documentElement.scrollTop = 0;
+      }
     };
 
     window.addEventListener('hashchange', handleHashChange);
@@ -52,8 +60,9 @@ export const App: React.FC = () => {
 
       // Dynamic Route: Blog Article Details
       if (path.indexOf('/blog/') === 0) {
-        const blogId = path.split('/')[2];
-        return <BlogDetail id={blogId || ''} />;
+        const parts = path.split('/').filter(Boolean);
+        const blogId = parts[1] || '';
+        return <BlogDetail id={blogId} />;
       }
 
       // Dynamic Route: Tool Archive Details
@@ -66,17 +75,20 @@ export const App: React.FC = () => {
         return <ToolDetail id={toolId} initialDate={dateParam} />;
       }
 
-      // Fallback: Always return Home to prevent "Record Not Found"
+      // Fallback: Always return Home to prevent blank screens
       return <Home />;
     } catch (error) {
       // Fail-safe: Render Home if any routing logic fails
-      console.warn("Navigation fallback triggered:", error);
+      console.error("Navigation error, falling back to Home:", error);
       return <Home />;
     }
   };
 
   return (
     <Layout>
+      {/* Error Boundary logic: if Layout crashes due to missing icons, 
+          the whole app might go black. Ensure Layout is also protected.
+      */}
       {renderContent()}
     </Layout>
   );
