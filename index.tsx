@@ -3,20 +3,25 @@ import ReactDOM from 'react-dom/client';
 import { App } from './App';
 
 /**
- * Note: We removed "import './index.css'" to prevent the build error 
- * "Could not resolve ./index.css" on Netlify. 
- * Styles are handled via Tailwind CDN in index.html.
+ * PRODUCTION SAFETY FIX:
+ * We ensure that even if some libraries (like Lucide) fail to load globally,
+ * the React application doesn't crash immediately.
  */
+
+// Define a fallback for Lucide to prevent "ReferenceError" in older browsers
+if (typeof window !== 'undefined' && !(window as any).LucideIcons) {
+  (window as any).LucideIcons = {};
+}
 
 const rootElement = document.getElementById('root');
 
 if (!rootElement) {
-  throw new Error("Critical: Root element not found. Check index.html");
+  console.error("Critical Error: #root element is missing from index.html");
+} else {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }
-
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
