@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { TOOLS, NAV_LINKS } from './constants';
-import { getDailyQuote, getOnThisDay, getAutomatedArchive, getCycleSeed, ArchivalRecord } from '../services/geminiService';
+import { getAutomatedArchive } from "./geminiService";
 import { ToolModal } from '../components/ToolModal';
 import { BMICalculator } from '../components/tools/BMICalculator';
 import { WordCounter } from '../components/tools/WordCounter';
