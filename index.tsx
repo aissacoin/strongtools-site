@@ -1,7 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
-import './index.css'; 
+
+/**
+ * Note: We removed "import './index.css'" to prevent the build error 
+ * "Could not resolve ./index.css" on Netlify. 
+ * Styles are handled via Tailwind CDN in index.html.
+ */
 
 const rootElement = document.getElementById('root');
 
