@@ -10,13 +10,19 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
-        // FIX 1: Define CATEGORY_COLORS here so it's available globally before scripts run
+        // FIX 1: Define Missing Global Variables
         window.CATEGORY_COLORS = {
             security: '#3b82f6',
             utility: '#10b981',
             coding: '#8b5cf6',
             web: '#f59e0b',
             design: '#ec4899'
+        };
+
+        // FIX 2: Define Missing Global Functions (getCycleSeed)
+        window.getCycleSeed = function() {
+            const now = new Date();
+            return now.getFullYear() + (now.getMonth() + 1) + now.getDate();
         };
 
         tailwind.config = {
@@ -43,7 +49,6 @@
     <script type="module" src="/index.tsx"></script>
 
     <script>
-        // Delay icon creation to ensure DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) {
                 lucide.createIcons();
