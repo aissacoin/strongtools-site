@@ -13,8 +13,6 @@ import { PercentageCalc } from './PercentageCalc';
 import { MorseCodeTool } from './MorseCodeTool';
 import { WeatherLive } from './WeatherLive';
 import { BirthWatchTool } from './BirthWatchTool';
-
-export { Home } from './Home'; // This is just to keep the export consistent
 import { 
   Clock, History, Zap, ChevronRight, Quote, Landmark, 
   QrCode, RefreshCw, BookOpen, ArrowUpRight, Loader2,
