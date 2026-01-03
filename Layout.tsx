@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { NAV_LINKS } from '../constants';
+import { NAV_LINKS } from "./constants";
 import { Menu, X, Sun, Moon, Github, ShieldCheck } from 'lucide-react';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
