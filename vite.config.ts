@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  // This ensures assets are linked correctly relative to the root
+  // Using absolute root path for Netlify production
   base: '/', 
   resolve: {
     alias: {
@@ -14,7 +14,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    // Helps avoid issues with TypeScript files in the root
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
