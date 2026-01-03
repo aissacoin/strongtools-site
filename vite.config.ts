@@ -4,8 +4,8 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  // Changing base to empty string for Netlify compatibility
-  base: '',
+  // This ensures assets are linked correctly relative to the root
+  base: '/', 
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
@@ -13,7 +13,12 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    assetsDir: '',
-    emptyOutDir: true,
-  }
+    assetsDir: 'assets',
+    // Helps avoid issues with TypeScript files in the root
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+      },
+    },
+  },
 });
