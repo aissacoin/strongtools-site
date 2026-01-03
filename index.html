@@ -4,59 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StrongTools | Premium Digital Utility Archive</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        accent: '#D4AF37',
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    }
+                    colors: { accent: '#D4AF37' }
                 }
             }
         }
     </script>
-
     <style>
-        :root {
-            --accent: #D4AF37;
-        }
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #050505;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        #root {
-            min-height: 100vh;
-        }
-        /* Custom scrollbar for premium look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #D4AF37;
-            border-radius: 4px;
-        }
+        body { background-color: #050505; color: white; margin: 0; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    
-    <script type="module" src="/index.tsx"></script>
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>
