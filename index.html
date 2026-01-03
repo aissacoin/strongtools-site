@@ -6,7 +6,7 @@
     <title>StrongTools | Premium Digital Utility Archive</title>
     
     <script>
-        // تعريف الألوان
+        // Define Category Colors to prevent ReferenceError
         window.CATEGORY_COLORS = {
             security: '#3b82f6',
             utility: '#10b981',
@@ -15,7 +15,7 @@
             design: '#ec4899'
         };
 
-        // تعريف الدالة المفقودة getCycleSeed
+        // Define missing getCycleSeed function
         window.getCycleSeed = function() {
             try {
                 const now = new Date();
@@ -33,14 +33,21 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { accent: '#D4AF37' }
+                    colors: { 
+                        accent: '#D4AF37' 
+                    }
                 }
             }
         }
     </script>
     
     <style>
-        body { background-color: #050505; color: white; margin: 0; font-family: system-ui, sans-serif; }
+        body { 
+            background-color: #050505; 
+            color: white; 
+            margin: 0; 
+            font-family: system-ui, -apple-system, sans-serif; 
+        }
         #root { min-height: 100vh; }
     </style>
 </head>
@@ -50,7 +57,7 @@
     <script type="module" src="/index.tsx"></script>
 
     <script>
-        // تشغيل الأيقونات بعد تحميل الصفحة
+        // Initialize icons after everything is loaded
         window.addEventListener('load', () => {
             if (window.lucide) {
                 lucide.createIcons();
