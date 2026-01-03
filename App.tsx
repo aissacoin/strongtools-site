@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Layout } from './Layout';
 import { Home } from './Home';
@@ -13,7 +12,8 @@ import { Terms } from './Terms';
 import { AlertTriangle } from 'lucide-react';
 
 /**
- * Registry Error Page (404)
+ * STRONGTOOLS - REGISTRY ERROR PAGE (404)
+ * Displayed when a hash route does not match any known archival nodes.
  */
 const NotFound: React.FC = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] text-white p-6 text-center">
@@ -28,7 +28,11 @@ const NotFound: React.FC = () => (
   </div>
 );
 
-const App: React.FC = () => {
+/**
+ * STRONGTOOLS - MAIN APPLICATION ROUTER
+ * Uses hash-based routing to ensure compatibility with static hosting like Netlify.
+ */
+export const App: React.FC = () => {
   const [currentHash, setCurrentHash] = React.useState(window.location.hash || '#/');
 
   React.useEffect(() => {
@@ -60,9 +64,9 @@ const App: React.FC = () => {
       return <BlogDetail id={id} key={`blog-${id}`} />;
     }
 
-    // Dynamic Tool Routing: #/tool/:id or #/tool/:id/:date
+    // Dynamic Tool Routing: #/tool/:id
     if (hash.startsWith('/tool/')) {
-      const parts = hash.split('/').filter(Boolean); // ['tool', 'id', 'date']
+      const parts = hash.split('/').filter(Boolean);
       const id = parts[1];
       const date = parts[2];
       if (!id) return <NotFound />;
@@ -74,5 +78,3 @@ const App: React.FC = () => {
 
   return <Layout>{renderContent()}</Layout>;
 };
-
-export default App;
