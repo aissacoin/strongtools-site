@@ -1,6 +1,6 @@
 
 import { BookOpen, Clock, ArrowRight, Search, Loader2, Sparkles, History } from 'lucide-react';
-import { getDailyChronicles } from '../services/geminiService';
+import { getDailyChronicles } from './services/.geminiService';
 
 const PIXABAY_KEY = '53998460-a3c2d1b031017273e7b6e80cb';
 
