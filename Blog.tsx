@@ -1,5 +1,4 @@
 
-import React, { useEffect, useState } from 'react';
 import { BookOpen, Clock, ArrowRight, Search, Loader2, Sparkles, History } from 'lucide-react';
 import { getDailyChronicles } from '../services/geminiService';
 
