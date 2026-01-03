@@ -1,15 +1,15 @@
 
 import React from 'react';
-import { Layout } from './components/Layout';
-import { Home } from './pages/Home';
-import { Tools } from './pages/Tools';
-import { Blog } from './pages/Blog';
-import { BlogDetail } from './pages/BlogDetail';
-import { ToolDetail } from './pages/ToolDetail';
-import { Contact } from './pages/Contact';
-import { About } from './pages/About';
-import { Privacy } from './pages/Privacy';
-import { Terms } from './pages/Terms';
+import { Layout } from './Layout';
+import { Home } from './Home';
+import { Tools } from './Tools';
+import { Blog } from './Blog';
+import { BlogDetail } from './BlogDetail';
+import { ToolDetail } from './ToolDetail';
+import { Contact } from './Contact';
+import { About } from './About';
+import { Privacy } from './Privacy';
+import { Terms } from './Terms';
 import { AlertTriangle } from 'lucide-react';
 
 /**
