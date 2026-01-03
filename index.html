@@ -10,7 +10,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
-        // FIX 1: Define Missing Global Variables
+        // FIX 1: Global Variables
         window.CATEGORY_COLORS = {
             security: '#3b82f6',
             utility: '#10b981',
@@ -19,7 +19,8 @@
             design: '#ec4899'
         };
 
-        // FIX 2: Define Missing Global Functions (getCycleSeed)
+        // FIX 2: Global Function (getCycleSeed)
+        // This generates a unique number based on the date to prevent the ReferenceError
         window.getCycleSeed = function() {
             const now = new Date();
             return now.getFullYear() + (now.getMonth() + 1) + now.getDate();
