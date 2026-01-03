@@ -1,10 +1,10 @@
-
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { TOOLS } from "./constants";
 
 // === SOVEREIGN API REGISTRY ===
-const GEMINI_KEY = process.env.API_KEY || "";
-const OPENROUTER_KEY = process.env.OPENROUTER_KEY || "";
+// Use import.meta.env for Vite environment variables
+const GEMINI_KEY = import.meta.env.VITE_API_KEY || "";
+const OPENROUTER_KEY = import.meta.env.VITE_OPENROUTER_KEY || "";
 const PIXABAY_KEY = "48924033-0c30626359e86566498506253";
 
 export interface ArchivalRecord {
@@ -45,7 +45,9 @@ export const getPixabayImage = async (query: string): Promise<string | null> => 
  */
 const generateMasterManuscript = async (tool: any): Promise<Partial<ArchivalRecord> | null> => {
   if (!GEMINI_KEY) return null;
-  const ai = new GoogleGenAI({ apiKey: GEMINI_KEY });
+  
+  // Corrected Class Name: GoogleGenerativeAI
+  const genAI = new GoogleGenerativeAI(GEMINI_KEY);
   
   const systemInstruction = `You are the Chief Technical Historian for StrongTools. Generate a 1200-word scholarly manuscript in semantic HTML (h2, h3, p, strong, ul, li). 
   FOCUS: Historical evolution, mathematical logic, and advanced professional use cases. 
@@ -62,16 +64,16 @@ const generateMasterManuscript = async (tool: any): Promise<Partial<ArchivalReco
   Ensure the response is strictly valid HTML content only.`;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-pro-preview",
-      contents: prompt,
-      config: { 
-        systemInstruction, 
-        temperature: 0.8,
-        thinkingConfig: { thinkingBudget: 32768 }
-      }
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-1.5-pro", // Standard stable model name
+      systemInstruction: systemInstruction 
     });
-    return { title: `${tool.name}: An Institutional Analysis`, content: response.text, type: 'MASTER' };
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    return { title: `${tool.name}: An Institutional Analysis`, content: text, type: 'MASTER' };
   } catch (e) {
     console.warn("Primary Node Failure. Initiating OpenRouter Failover...", e);
     return null;
@@ -92,7 +94,7 @@ const generateProGuide = async (tool: any): Promise<Partial<ArchivalRecord> | nu
         "HTTP-Referer": "https://strongtools.site"
       },
       body: JSON.stringify({
-        "model": "google/gemini-2.5-flash-lite-latest",
+        "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
         "messages": [
           { "role": "system", "content": "You are a Senior Professional Technical Writer. Generate a 600-word high-quality guide in semantic HTML." },
           { "role": "user", "content": `Produce a professional technical guide for the instrument: '${tool.name}'. Description: ${tool.description}` }
