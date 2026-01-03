@@ -3,9 +3,10 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  // Force Vite to look at the current directory as the project root
+  root: process.cwd(),
   plugins: [react()],
-  // Using empty string for base to allow relative asset resolution
-  base: '',
+  base: './',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
@@ -13,12 +14,10 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    assetsDir: '', // Keeps assets in the root of dist
-    sourcemap: false,
+    assetsDir: 'assets',
+    emptyOutDir: true,
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'),
-      },
+      input: path.resolve(__dirname, 'index.html'),
     },
   },
 });
