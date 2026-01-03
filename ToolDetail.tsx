@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { TOOLS } from '../constants';
+import { TOOLS } from "./constants";
 import { renderToolLogic } from './Home';
 import { getArchivedContent, getCycleMetadata } from '../services/geminiService';
 import { 
