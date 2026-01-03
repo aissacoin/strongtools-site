@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { TOOLS } from "../constants";
+import { TOOLS } from "./constants";
 
 // === SOVEREIGN API REGISTRY ===
 const GEMINI_KEY = process.env.API_KEY || "";
