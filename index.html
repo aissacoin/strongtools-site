@@ -4,32 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StrongTools | Premium Digital Utility Archive</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        accent: '#D4AF37', // اللون الذهبي الخاص بك
+                        accent: '#D4AF37',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
         }
     </script>
+
     <style>
         :root {
             --accent: #D4AF37;
         }
         body {
             background-color: #050505;
-            color: white;
+            color: #ffffff;
             margin: 0;
-            font-family: sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        #root {
+            min-height: 100vh;
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
+    
     <script type="module" src="/index.tsx"></script>
 </body>
 </html>
