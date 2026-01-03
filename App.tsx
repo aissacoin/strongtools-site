@@ -1,40 +1,54 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+import React from 'react';
+import { Layout } from './Layout';
+import { Home } from './Home';
+import { Tools } from './Tools';
+import { Blog } from './Blog';
+import { BlogDetail } from './BlogDetail';
+import { ToolDetail } from './ToolDetail';
+import { Contact } from './Contact';
+import { About } from './About';
+import { Privacy } from './Privacy';
+import { Terms } from './Terms';
+import { AlertTriangle } from 'lucide-react';
 
-/**
- * STRONGTOOLS - CORE VITE CONFIGURATION
- * Optimized for Root Directory Deployment (No /src folder)
- */
-export default defineConfig({
-  plugins: [react()],
-  
-  // Set base to './' to ensure all assets are loaded using relative paths
-  // This is the primary fix for the "White Screen" issue on Netlify
-  base: './',
+export const App: React.FC = () => {
+  const [currentHash, setCurrentHash] = React.useState(window.location.hash || '#/');
 
-  resolve: {
-    alias: {
-      // Maps the '@' symbol to the current root directory
-      '@': path.resolve(__dirname, './'),
-    },
-  },
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash || '#/');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
-  build: {
-    // The directory where Netlify will look for the finished site
-    outDir: 'dist',
-    // Ensures assets are kept in the same flat structure
-    assetsDir: 'assets',
-    emptyOutDir: true,
-    
-    rollupOptions: {
-      input: {
-        // Explicitly defines index.html as the starting point
-        main: path.resolve(__dirname, 'index.html'),
-      },
-    },
-  },
-  
-  // Prevents the build from failing due to minor TypeScript warnings
-  logLevel: 'info',
-});
+  const renderContent = () => {
+    const hash = currentHash.replace(/^#/, '') || '/';
+
+    if (hash === '/' || hash === '') return <Home />;
+    if (hash === '/about') return <About />;
+    if (hash === '/contact') return <Contact />;
+    if (hash === '/privacy') return <Privacy />;
+    if (hash === '/terms') return <Terms />;
+    if (hash === '/tools') return <Tools />;
+    if (hash === '/blog') return <Blog />;
+
+    if (hash.startsWith('/blog/')) {
+      const parts = hash.split('/');
+      const id = parts[2];
+      return <BlogDetail id={id} />;
+    }
+
+    if (hash.startsWith('/tool/')) {
+      const parts = hash.split('/').filter(Boolean);
+      const id = parts[1];
+      const date = parts[2];
+      return <ToolDetail id={id} initialDate={date} />;
+    }
+
+    return <div className="text-white text-center mt-20">Page Not Found</div>;
+  };
+
+  return <Layout>{renderContent()}</Layout>;
+};
