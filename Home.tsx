@@ -1,16 +1,20 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Layout } from './Layout';
+import { ToolModal } from './ToolModal';
 import { TOOLS, NAV_LINKS } from './constants';
-import { getAutomatedArchive } from "./geminiService";
-import { ToolModal } from "./ToolModal";
-import { BMICalculator } from '../components/tools/BMICalculator';
-import { WordCounter } from '../components/tools/WordCounter';
-import { WeatherLive } from '../components/tools/WeatherLive';
-import { PercentageCalc } from '../components/tools/PercentageCalc';
-import { AgeCalc } from '../components/tools/AgeCalc';
-import { BirthWatchTool } from '../components/tools/BirthWatchTool';
-import { MorseCodeTool } from '../components/tools/MorseCodeTool';
-import * as LucideIcons from 'lucide-react';
+import { getAutomatedArchive } from './geminiService';
+
+// Direct imports from the root folder
+import { BMICalculator } from './BMICalculator';
+import { WordCounter } from './WordCounter';
+import { AgeCalc } from './AgeCalc';
+import { PercentageCalc } from './PercentageCalc';
+import { MorseCodeTool } from './MorseCodeTool';
+import { WeatherLive } from './WeatherLive';
+import { BirthWatchTool } from './BirthWatchTool';
+
+export { Home } from './Home'; // This is just to keep the export consistent
 import { 
   Clock, History, Zap, ChevronRight, Quote, Landmark, 
   QrCode, RefreshCw, BookOpen, ArrowUpRight, Loader2,
