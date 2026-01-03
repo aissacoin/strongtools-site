@@ -15,7 +15,7 @@ import {
   FileText,
   ExternalLink
 } from 'lucide-react';
-import { getDetailedArticle, getPixabayImage } from '../services/geminiService';
+import { getAutomatedArchive } from "./geminiService";
 import { TOOLS } from '../constants';
 
 interface BlogDetailProps {
