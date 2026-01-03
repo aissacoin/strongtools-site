@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { History, Sparkles, Loader2, Music, Film, Trophy } from 'lucide-react';
-// Correct Library and Types
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const BirthWatchTool: React.FC = () => {
@@ -19,39 +18,23 @@ export const BirthWatchTool: React.FC = () => {
     setError(null);
 
     try {
-      // 1. Correct Environment Variable for Vite
       const apiKey = import.meta.env.VITE_API_KEY || "";
-      if (!apiKey) throw new Error("API Key is missing");
+      if (!apiKey) throw new Error("API Key missing");
 
-      // 2. Initialize correct Class
       const genAI = new GoogleGenerativeAI(apiKey);
-      
-      // 3. Use stable model name
-      const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
-      });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const prompt = `What were the cultural highlights of the year ${year}? Return the data strictly in JSON format.`;
+      const prompt = `Provide cultural highlights for the year ${year} in JSON format with keys: music, cinema, majorEvent. Max 15 words per value.`;
 
-      const result = await model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.7,
-        }
-      });
-
+      const result = await model.generateContent(prompt);
       const response = await result.response;
-      let text = response.text();
+      let text = response.text().replace(/```json|```/g, "").trim();
       
-      // Cleanup JSON if needed
-      text = text.replace(/```json|```/g, "").trim();
-      const finalResult = JSON.parse(text);
-
-      setData(finalResult);
+      const parsedData = JSON.parse(text);
+      setData(parsedData);
     } catch (err) {
-      setError("Archive node failed to retrieve data for this temporal coordinate.");
       console.error(err);
+      setError("Temporal node synchronization failed.");
     } finally {
       setLoading(false);
     }
@@ -70,16 +53,46 @@ export const BirthWatchTool: React.FC = () => {
             type="number" 
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="flex-grow bg-black border border-[#D4AF37]/20 rounded-2xl p-4 text-[#D4AF37] text-xl font-black outline-none focus:border-[#D4AF37] transition-all"
+            className="flex-grow bg-black border border-[#D4AF37]/20 rounded-2xl p-4 text-[#D4AF37] text-xl font-black outline-none focus:border-[#D4AF37]"
             placeholder="Year..."
           />
           <button 
             onClick={fetchHistory}
             disabled={loading}
-            className="px-6 bg-[#D4AF37] text-black rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#D4AF37]/10"
+            className="px-6 bg-[#D4AF37] text-black rounded-2xl font-black hover:scale-105 transition-transform disabled:opacity-50"
           >
             {loading ? <Loader2 className="animate-spin" /> : <Sparkles />}
           </button>
         </div>
 
-        {error && <p className="text-rose-40
+        {error && <p className="text-rose-400 text-xs italic px-2">{error}</p>}
+
+        {data && !loading && (
+          <div className="grid grid-cols-1 gap-4 animate-in fade-in slide-in-from-bottom-4">
+            <div className="p-4 bg-black/40 border border-white/5 rounded-2xl flex items-center gap-4">
+              <Music className="text-[#D4AF37] shrink-0" size={20} />
+              <div>
+                <p className="text-[8px] font-black uppercase text-[#D4AF37]/40 tracking-widest">Audio Archive</p>
+                <p className="text-sm text-white/90 italic">{data.music}</p>
+              </div>
+            </div>
+            <div className="p-4 bg-black/40 border border-white/5 rounded-2xl flex items-center gap-4">
+              <Film className="text-[#D4AF37] shrink-0" size={20} />
+              <div>
+                <p className="text-[8px] font-black uppercase text-[#D4AF37]/40 tracking-widest">Visual Archive</p>
+                <p className="text-sm text-white/90 italic">{data.cinema}</p>
+              </div>
+            </div>
+            <div className="p-4 bg-black/40 border border-white/5 rounded-2xl flex items-center gap-4">
+              <Trophy className="text-[#D4AF37] shrink-0" size={20} />
+              <div>
+                <p className="text-[8px] font-black uppercase text-[#D4AF37]/40 tracking-widest">Global Record</p>
+                <p className="text-sm text-white/90 italic">{data.majorEvent}</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
