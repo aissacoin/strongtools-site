@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
 import { 
   Sun, Cloud, CloudRain, CloudLightning, Snowflake, 
   Wind, Droplets, Search, Sparkles, MapPin, 
-  Loader2, AlertCircle
+  Loader2
 } from 'lucide-react';
-import { GoogleGenAI, Type } from "@google/genai";
+// Correct Library and Types
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const WeatherLive: React.FC = () => {
   const [city, setCity] = useState('');
@@ -20,40 +20,36 @@ export const WeatherLive: React.FC = () => {
     setLoading(true);
     setError(null);
 
-    // Initializing Google GenAI with process.env.API_KEY
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Atmospheric status for: ${city}`,
-        config: {
-          systemInstruction: "You are the Celestial Oracle. Return CURRENT weather data in JSON. Include: temp (Celsius), condition, humidity, wind, tip (prestigious health tip).",
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              temp: { type: Type.NUMBER },
-              condition: { type: Type.STRING },
-              humidity: { type: Type.STRING },
-              wind: { type: Type.STRING },
-              tip: { type: Type.STRING }
-            },
-            required: ["temp", "condition", "humidity", "wind", "tip"]
-          }
-        }
+      // 1. Correct Environment Variable for Vite
+      const apiKey = import.meta.env.VITE_API_KEY || "";
+      if (!apiKey) throw new Error("API Key is missing");
+
+      // 2. Initialize correct Class
+      const genAI = new GoogleGenerativeAI(apiKey);
+      
+      // 3. Use stable model name
+      const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash",
       });
 
-      const text = response.text;
-      if (!text) throw new Error("Empty response from AI");
-      const result = JSON.parse(text);
+      const prompt = `Atmospheric status for: ${city}. Return CURRENT weather data in JSON format. 
+      Include: temp (Celsius number), condition (string), humidity (string), wind (string), tip (prestigious health tip string).`;
+
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      let text = response.text();
+      
+      // Cleanup JSON if AI adds markdown backticks
+      text = text.replace(/```json|```/g, "").trim();
+      const data = JSON.parse(text);
 
       setWeather({
-        temp: result.temp,
-        condition: result.condition,
-        humidity: result.humidity,
-        wind: result.wind,
-        tip: result.tip,
+        temp: data.temp,
+        condition: data.condition,
+        humidity: data.humidity,
+        wind: data.wind,
+        tip: data.tip,
         city: city
       });
     } catch (err) {
@@ -92,16 +88,20 @@ export const WeatherLive: React.FC = () => {
               className="w-full bg-black border border-[#D4AF37]/20 rounded-2xl py-5 pl-14 pr-6 text-white outline-none focus:border-[#D4AF37] transition-all"
             />
           </div>
-          <button type="submit" disabled={loading} className="px-8 bg-[#D4AF37] text-black rounded-2xl font-black">
+          <button type="submit" disabled={loading} className="px-8 bg-[#D4AF37] text-black rounded-2xl font-black transition-transform active:scale-95">
             {loading ? <Loader2 className="animate-spin" /> : <Search />}
           </button>
         </form>
 
-        {error && <div className="text-rose-400 font-bold p-4 bg-rose-500/5 rounded-xl border border-rose-500/20">{error}</div>}
+        {error && (
+          <div className="text-rose-400 font-bold p-4 bg-rose-500/5 rounded-xl border border-rose-500/20 animate-bounce">
+            {error}
+          </div>
+        )}
 
         {weather && !loading && (
-          <div className="animate-in fade-in duration-500 space-y-8">
-            <div className="flex justify-between items-center p-8 bg-white/5 rounded-[2.5rem]">
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+            <div className="flex justify-between items-center p-8 bg-white/5 rounded-[2.5rem] border border-white/5">
                <div>
                  <p className="text-[#D4AF37] text-xs font-black uppercase tracking-widest mb-2">{weather.city}</p>
                  <div className="text-7xl font-black text-white">{weather.temp}°C</div>
@@ -111,11 +111,15 @@ export const WeatherLive: React.FC = () => {
             </div>
             <div className="grid grid-cols-2 gap-4">
                <div className="p-6 bg-black border border-white/5 rounded-3xl">
-                  <p className="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-1">Humidity</p>
+                  <p className="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-1 flex items-center gap-2">
+                    <Droplets size={10} /> Humidity
+                  </p>
                   <p className="text-xl font-black text-white">{weather.humidity}</p>
                </div>
                <div className="p-6 bg-black border border-white/5 rounded-3xl">
-                  <p className="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-1">Wind Speed</p>
+                  <p className="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-1 flex items-center gap-2">
+                    <Wind size={10} /> Wind Speed
+                  </p>
                   <p className="text-xl font-black text-white">{weather.wind}</p>
                </div>
             </div>
