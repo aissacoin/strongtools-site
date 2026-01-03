@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { TOOLS, CATEGORY_COLORS } from '../constants';
-import * as LucideIcons from 'lucide-react';
+import { TOOLS } from "./constants"
+  ;import * as LucideIcons from 'lucide-react';
 import { Search, Sparkles } from 'lucide-react';
 
 export const Tools: React.FC = () => {
