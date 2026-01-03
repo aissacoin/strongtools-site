@@ -4,8 +4,8 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  // Using absolute root path for Netlify production
-  base: '/', 
+  // Base path should be '/' for Netlify subdomains
+  base: '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
@@ -13,8 +13,9 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    // This ensures that the TSX is compiled into JS
     assetsDir: 'assets',
-    emptyOutDir: true,
+    sourcemap: false,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
