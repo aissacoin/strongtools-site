@@ -12,13 +12,20 @@ import { Terms } from './Terms';
 import { AlertTriangle } from 'lucide-react';
 
 export const App: React.FC = () => {
+  // Logic to handle navigation
   const [currentHash, setCurrentHash] = React.useState(window.location.hash || '#/');
 
   React.useEffect(() => {
+    // If user lands on the site without #/, redirect them to #/ automatically
+    if (!window.location.hash || window.location.hash === '#') {
+      window.location.hash = '#/';
+    }
+
     const handleHashChange = () => {
       setCurrentHash(window.location.hash || '#/');
       window.scrollTo({ top: 0, behavior: 'instant' });
     };
+
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
@@ -26,6 +33,7 @@ export const App: React.FC = () => {
   const renderContent = () => {
     const hash = currentHash.replace(/^#/, '') || '/';
 
+    // Route Mapping
     if (hash === '/' || hash === '') return <Home />;
     if (hash === '/about') return <About />;
     if (hash === '/contact') return <Contact />;
@@ -35,19 +43,17 @@ export const App: React.FC = () => {
     if (hash === '/blog') return <Blog />;
 
     if (hash.startsWith('/blog/')) {
-      const parts = hash.split('/');
-      const id = parts[2];
-      return <BlogDetail id={id} />;
+      const id = hash.split('/')[2];
+      return <BlogDetail id={id || ''} />;
     }
 
     if (hash.startsWith('/tool/')) {
       const parts = hash.split('/').filter(Boolean);
-      const id = parts[1];
-      const date = parts[2];
-      return <ToolDetail id={id} initialDate={date} />;
+      return <ToolDetail id={parts[1] || ''} initialDate={parts[2]} />;
     }
 
-    return <div className="text-white text-center mt-20">Page Not Found</div>;
+    // Default Fallback
+    return <Home />;
   };
 
   return <Layout>{renderContent()}</Layout>;
