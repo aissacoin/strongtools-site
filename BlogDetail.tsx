@@ -16,8 +16,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { getAutomatedArchive } from "./geminiService";
-import { TOOLS } from '../constants';
-
+import { TOOLS } from "./constants";
 interface BlogDetailProps {
   id: string;
 }
