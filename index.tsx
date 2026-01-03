@@ -1,20 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import { App } from './App'; 
 import './index.css';
 
 /**
- * STRONGTOOLS SOVEREIGN REGISTRY - MOUNTING PROTOCOL
- * This file acts as the bridge between your React logic and the HTML structure.
+ * STRONGTOOLS - SOVEREIGN REGISTRY MOUNTING PROTOCOL
+ * This script initializes the React application and injects it into the DOM.
  */
 
 const rootElement = document.getElementById('root');
 
 if (!rootElement) {
-  // Critical safety check: ensures the HTML has the necessary 'root' div
-  throw new Error("Target container 'root' is missing. Check your index.html file.");
+  // Safety check to ensure the application doesn't crash silently
+  throw new Error("CRITICAL ERROR: Target container 'root' not found in index.html.");
 }
 
+// Create the React root and render the application
 const root = ReactDOM.createRoot(rootElement);
 
 root.render(
