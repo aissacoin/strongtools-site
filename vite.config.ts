@@ -4,8 +4,8 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  // Base path should be '/' for Netlify subdomains
-  base: '/',
+  // Using empty string for base to allow relative asset resolution
+  base: '',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
@@ -13,8 +13,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    // This ensures that the TSX is compiled into JS
-    assetsDir: 'assets',
+    assetsDir: '', // Keeps assets in the root of dist
     sourcemap: false,
     rollupOptions: {
       input: {
