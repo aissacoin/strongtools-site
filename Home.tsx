@@ -10,10 +10,10 @@ import { ToolModal } from './ToolModal';
 import { TOOLS } from './constants';
 import { getAutomatedArchive } from './geminiService';
 
-// Direct Component Imports
+// Direct Component Imports - Updated Paths
 import { BMICalculator } from './BMICalculator';
 import { WordCounter } from './WordCounter';
-import { AgeCalc } from './AgeCalc';
+import { AgeCalculator } from './AgeCalc'; // Updated to match renamed file
 import { PercentageCalc } from './PercentageCalc';
 import { MorseCodeTool } from './MorseCodeTool';
 import { WeatherLive } from './WeatherLive';
@@ -27,7 +27,7 @@ interface ArchivalRecord {
   imageUrl?: string;
 }
 
-// Helper functions with English formatting forced
+// Global UI Helpers
 const getDailyQuote = async () => ({ 
     quote: "Precision is the soul of digital craftsmanship.", 
     author: "Registry Chronicles" 
@@ -39,27 +39,26 @@ const getOnThisDay = async () => {
 };
 
 const getCycleSeed = () => {
-    const seed = (window as any).getCycleSeed ? (window as any).getCycleSeed() : new Date().getDate();
-    return String(seed).padStart(4, '0');
+    return new Date().getDate().toString().padStart(4, '0');
 };
 
-// Tool Execution Engine
+// Tool Execution Engine - MATCHED WITH IDs in constants.ts
 export const renderToolLogic = (id: string) => {
   switch (id) {
-    case 'weather-live': return <WeatherLive />;
-    case 'bmi-calc': return <BMICalculator />;
+    case 'weather-live':   return <WeatherLive />;
+    case 'bmi-calc':       return <BMICalculator />;
     case 'scribe-counter': return <WordCounter />;
-    case 'basic-calc': return <BasicCalcTool />;
-    case 'perc-calc': return <PercentageCalc />;
-    case 'age-calc': return <AgeCalc />;
-    case 'birth-watch': return <BirthWatchTool />;
-    case 'morse-code': return <MorseCodeTool />;
-    case 'unit-conv': return <UnitConvTool />;
-    case 'pwd-gen': return <PasswordForgeTool />;
+    case 'basic-calc':     return <BasicCalcTool />;
+    case 'perc-calc':      return <PercentageCalc />;
+    case 'age-calc':       return <AgeCalculator />;
+    case 'birth-watch':    return <BirthWatchTool />;
+    case 'morse-code':     return <MorseCodeTool />;
+    case 'unit-conv':      return <UnitConvTool />;
+    case 'pwd-gen':        return <PasswordForgeTool />;
     case 'qr-gen': return (
       <div className="text-center p-8 bg-black/40 rounded-[2rem] border border-[#D4AF37]/20">
         <QrCode className="mx-auto text-[#D4AF37] mb-4" size={48} />
-        <p className="text-sm font-bold text-white mb-4">StrongTools QR Generator</p>
+        <p className="text-sm font-bold text-white mb-4 italic uppercase tracking-widest">StrongTools QR Generator</p>
         <img 
           src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('https://strongtools.site')}`} 
           className="mx-auto bg-white p-2 rounded-xl" 
@@ -70,19 +69,21 @@ export const renderToolLogic = (id: string) => {
     default: return (
       <div className="text-center py-10 opacity-20">
         <Zap size={48} className="mx-auto mb-2" />
-        <p className="text-[10px] uppercase font-black tracking-widest">Accessing Module...</p>
+        <p className="text-[10px] uppercase font-black tracking-widest">Accessing Secure Module...</p>
       </div>
     );
   }
 };
 
-// Internal Core Tools
+/** * INTERNAL CORE TOOLS 
+ * These are small tools rendered directly within the home vault 
+ */
+
 const BasicCalcTool: React.FC = () => {
   const [val, setVal] = useState('0');
   const add = (v: string) => setVal(p => (p === '0' || p === 'Error' ? v : p + v));
   const solve = () => { 
     try { 
-        // Force English number evaluation
         const result = Function(`"use strict"; return (${val.replace(/[^-+*/.0-9]/g, '')})`)();
         setVal(String(result)); 
     } catch { setVal('Error'); } 
@@ -109,7 +110,7 @@ const UnitConvTool: React.FC = () => {
   const [result, setResult] = useState('');
   useEffect(() => {
     const v = parseFloat(input) || 0;
-    const opt = { minimumFractionDigits: 2, maximumFractionDigits: 2, locale: 'en-US' };
+    const opt = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
     if (type === 'length') setResult(`${(v * 0.621371).toLocaleString('en-US', opt)} Miles`);
     else if (type === 'weight') setResult(`${(v * 2.20462).toLocaleString('en-US', opt)} lbs`);
     else setResult(`${((v * 9/5) + 32).toLocaleString('en-US', opt)} °F`);
@@ -142,6 +143,7 @@ const PasswordForgeTool: React.FC = () => {
   );
 };
 
+// MAIN HOME COMPONENT
 export const Home: React.FC = () => {
   const [quote, setQuote] = useState<{ quote: string; author: string } | null>(null);
   const [historyEvent, setHistoryEvent] = useState<string | null>(null);
@@ -157,16 +159,17 @@ export const Home: React.FC = () => {
         const [q, h] = await Promise.all([getDailyQuote(), getOnThisDay()]);
         setQuote(q);
         setHistoryEvent(h);
-      } catch (e) { console.error("Sync failure", e); }
+      } catch (e) { console.error("Archive Sync failure", e); }
     };
     
     const fetchHomeChronicles = async () => {
       setLoadingChronicles(true);
       try {
+        // Fetch specific featured tools for the landing page chronicles
         const featuredIds = ['weather-live', 'bmi-calc', 'scribe-counter'];
         const results = await Promise.all(featuredIds.map(id => getAutomatedArchive(id)));
         setChronicles(results.filter((r): r is ArchivalRecord => r !== null));
-      } catch (e) { console.error("Chronicle Sync Failed", e); }
+      } catch (e) { console.error("Chronicle Registry Sync Failed", e); }
       finally { setLoadingChronicles(false); }
     };
 
@@ -178,60 +181,75 @@ export const Home: React.FC = () => {
   const activeTool = TOOLS.find(t => t.id === activeToolId);
 
   return (
-    <div className="pb-32 px-4 sm:px-6 lg:px-8 overflow-x-hidden text-white font-sans">
-      {/* Hero Section */}
-      <section className="pt-20 pb-24 text-center">
-        <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-black uppercase tracking-[0.6em] mb-12 shadow-xl">
-          <Zap size={16} /> Registry v4.2 Secured
+    <div className="pb-32 px-4 sm:px-6 lg:px-8 overflow-x-hidden text-white bg-[#050505] selection:bg-[#D4AF37] selection:text-black">
+      
+      {/* HERO SECTION - INSTITUTIONAL BRANDING */}
+      <section className="pt-32 pb-24 text-center">
+        <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-black uppercase tracking-[0.6em] mb-12 shadow-2xl animate-pulse">
+          <ShieldCheck size={16} /> Registry Access: Tier 1 Secured
         </div>
-        <h1 className="text-5xl md:text-9xl font-black tracking-tighter text-white mb-10 leading-[0.85] uppercase italic">
+        <h1 className="text-6xl md:text-9xl font-black tracking-tighter text-white mb-10 leading-[0.85] uppercase italic">
           THE <span className="text-[#D4AF37]">ULTIMATE</span><br/>
           UTILITY <span className="opacity-40">VAULT</span>
         </h1>
+        <p className="text-white/30 text-lg md:text-xl uppercase tracking-[0.4em] italic font-medium">Digital Craftsmanship & Professional Instruments</p>
       </section>
 
-      {/* Dashboard Metrics */}
-      <section className="max-w-7xl mx-auto mb-32">
+      {/* DASHBOARD METRICS */}
+      <section className="max-w-7xl mx-auto mb-40">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-          <div className="md:col-span-3 bg-white/5 rounded-[3rem] p-10 flex flex-col justify-between min-h-[300px] border border-white/5">
-            <Clock size={20} className="text-[#D4AF37]/60" />
+          <div className="md:col-span-3 bg-white/[0.02] rounded-[3rem] p-10 flex flex-col justify-between min-h-[300px] border border-white/5 group hover:border-[#D4AF37]/30 transition-all duration-700">
+            <Clock size={20} className="text-[#D4AF37]/60 group-hover:rotate-45 transition-transform" />
             <div className="text-6xl font-black text-white tabular-nums tracking-tighter">
               {currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}
             </div>
-            <div className="text-[10px] uppercase tracking-widest opacity-40 font-bold">Temporal Node</div>
+            <div className="text-[10px] uppercase tracking-widest opacity-40 font-bold italic">Temporal Synchronization Node</div>
           </div>
 
-          <div className="md:col-span-6 bg-white/5 rounded-[4rem] p-12 border-2 border-[#D4AF37]/30 relative flex flex-col justify-between">
+          <div className="md:col-span-6 bg-[#D4AF37]/5 rounded-[4rem] p-12 border-2 border-[#D4AF37]/20 relative flex flex-col justify-between shadow-[0_0_50px_rgba(212,175,55,0.05)]">
             <History size={24} className="text-[#D4AF37]" />
-            <p className="text-3xl font-black text-white italic leading-tight uppercase tracking-tight">{historyEvent || "Retrieving Context..."}</p>
+            <p className="text-3xl md:text-4xl font-black text-white italic leading-tight uppercase tracking-tight">
+                {historyEvent || "Calibrating Archive Context..."}
+            </p>
           </div>
 
-          <div className="md:col-span-3 bg-white/5 rounded-[3rem] p-10 flex flex-col justify-between text-center border border-white/5">
+          <div className="md:col-span-3 bg-white/[0.02] rounded-[3rem] p-10 flex flex-col justify-between text-center border border-white/5">
             <Quote size={20} className="mx-auto text-[#D4AF37]/60" />
-            <p className="text-xl font-bold text-white italic">"{quote?.quote || "Fetching..."}"</p>
+            <p className="text-xl font-bold text-white italic leading-relaxed">"{quote?.quote || "Fetching wisdom..."}"</p>
             <div className="text-[9px] uppercase tracking-widest opacity-20 font-black">— {quote?.author}</div>
           </div>
         </div>
       </section>
 
-      {/* Tool Index Grid */}
-      <section className="max-w-7xl mx-auto mb-32 space-y-16">
+      {/* TOOL INDEX GRID - THE MAIN VAULT */}
+      <section className="max-w-7xl mx-auto mb-48 space-y-20">
         <div className="flex items-center gap-8">
           <Landmark className="text-[#D4AF37]" size={32} />
-          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-[0.5em] text-white">THE <span className="text-[#D4AF37]">VAULT</span> INDEX</h2>
+          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-[0.5em] text-white italic">THE <span className="text-[#D4AF37]">VAULT</span> INDEX</h2>
+          <div className="flex-grow h-px bg-gradient-to-r from-[#D4AF37]/30 to-transparent"></div>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-          {TOOLS.slice(0, 12).map(tool => {
+          {TOOLS.map(tool => {
             const IconComponent = (LucideIcons as any)[tool.icon] || Zap;
             return (
-              <div key={tool.id} className="relative group cursor-pointer" onClick={() => setActiveToolId(tool.id)}>
-                <div className="bg-white/5 p-10 rounded-[4rem] border border-white/10 hover:border-[#D4AF37]/50 transition-all text-center space-y-6 group-hover:bg-[#D4AF37]/5">
-                  <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center bg-black/40 text-[#D4AF37] group-hover:scale-110 transition-transform">
-                    <IconComponent size={32} />
+              <div 
+                key={tool.id} 
+                className="relative group cursor-pointer" 
+                onClick={() => setActiveToolId(tool.id)}
+              >
+                <div className="absolute -inset-2 bg-[#D4AF37]/10 rounded-[4.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="relative bg-white/[0.02] p-12 rounded-[4rem] border border-white/5 hover:border-[#D4AF37]/50 transition-all text-center space-y-8 group-hover:-translate-y-2 group-hover:bg-[#0a0a0a]">
+                  <div className="w-24 h-24 mx-auto rounded-[2rem] flex items-center justify-center bg-black/60 text-[#D4AF37] border border-[#D4AF37]/10 group-hover:scale-110 group-hover:border-[#D4AF37]/50 transition-all duration-700">
+                    <IconComponent size={40} strokeWidth={1.5} />
                   </div>
-                  <h4 className="text-2xl font-black uppercase italic tracking-tighter group-hover:text-[#D4AF37] transition-colors">{tool.name}</h4>
-                  <p className="text-[10px] opacity-30 uppercase font-bold tracking-widest italic">{tool.category}</p>
+                  <div>
+                    <h4 className="text-2xl font-black uppercase italic tracking-tighter text-white group-hover:text-[#D4AF37] transition-colors">{tool.name}</h4>
+                    <p className="text-[9px] opacity-30 uppercase font-black tracking-[0.3em] mt-3 italic">{tool.category}</p>
+                  </div>
+                  <div className="pt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                    <ArrowUpRight size={18} className="mx-auto text-[#D4AF37]" />
+                  </div>
                 </div>
               </div>
             );
@@ -239,26 +257,41 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Automated Daily Chronicles */}
+      {/* AUTOMATED DAILY CHRONICLES - AI POWERED CONTENT */}
       <section className="max-w-7xl mx-auto mb-40 space-y-20">
         <div className="flex items-center gap-8">
           <ScrollText className="text-[#D4AF37]" size={32} />
-          <h2 className="text-3xl font-black uppercase tracking-[0.5em]">DAILY <span className="text-[#D4AF37]">CHRONICLES</span></h2>
-          <span className="text-[10px] opacity-50 ml-auto tabular-nums font-mono">CYCLE_ID: {getCycleSeed()}</span>
+          <h2 className="text-3xl font-black uppercase tracking-[0.5em] italic">DAILY <span className="text-[#D4AF37]">CHRONICLES</span></h2>
+          <span className="text-[10px] opacity-50 ml-auto tabular-nums font-mono border border-white/10 px-4 py-1 rounded-full uppercase tracking-widest italic">
+            Cycle_ID: #{getCycleSeed()}
+          </span>
         </div>
 
         {loadingChronicles ? (
-          <div className="py-24 text-center"><Loader2 className="animate-spin mx-auto text-[#D4AF37]" size={48} /></div>
+          <div className="py-40 text-center space-y-6">
+            <Loader2 className="animate-spin mx-auto text-[#D4AF37]" size={56} strokeWidth={1} />
+            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-[#D4AF37] animate-pulse">Syncing with Decentralized Knowledge Nodes...</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {chronicles.map((record, idx) => (
-              <article key={idx} className="bg-white/5 rounded-[3rem] p-8 border border-white/5 hover:border-[#D4AF37]/30 transition-all flex flex-col justify-between">
+              <article 
+                key={idx} 
+                className="group bg-white/[0.02] rounded-[3.5rem] p-10 border border-white/5 hover:border-[#D4AF37]/30 transition-all flex flex-col justify-between hover:bg-[#0a0a0a]"
+              >
                 <div>
-                  <h3 className="text-xl font-black text-[#D4AF37] mb-4 italic uppercase tracking-tighter">{record.title}</h3>
-                  <div className="text-gray-400 text-sm italic leading-relaxed opacity-70" dangerouslySetInnerHTML={{ __html: record.content.substring(0, 150) + '...' }} />
+                  <div className="flex items-center gap-3 mb-6">
+                    <Sparkles size={14} className="text-[#D4AF37]" />
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30 italic">Automated Dispatch</span>
+                  </div>
+                  <h3 className="text-2xl font-black text-white group-hover:text-[#D4AF37] mb-6 italic uppercase tracking-tighter leading-none transition-colors">{record.title}</h3>
+                  <div 
+                    className="text-white/40 text-base italic leading-relaxed opacity-70 prose-sm" 
+                    dangerouslySetInnerHTML={{ __html: record.content.substring(0, 180) + '...' }} 
+                  />
                 </div>
-                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between opacity-30 text-[9px] font-black uppercase tracking-widest">
-                   <span>Archival Node</span>
+                <div className="mt-10 pt-6 border-t border-white/5 flex items-center justify-between opacity-30 text-[9px] font-black uppercase tracking-widest">
+                   <span>Archival Node: Vault_{idx + 1}</span>
                    <span>{record.cycle}</span>
                 </div>
               </article>
@@ -267,7 +300,22 @@ export const Home: React.FC = () => {
         )}
       </section>
 
-      <ToolModal isOpen={!!activeToolId} onClose={() => setActiveToolId(null)} title={activeTool ? activeTool.name : ''} toolId={activeToolId || ''}>
+      {/* GLOBAL FOOTER BRANDING */}
+      <footer className="max-w-7xl mx-auto pt-24 border-t border-white/5 text-center">
+        <p className="text-[10px] font-black uppercase tracking-[0.8em] text-white/20 mb-4">StrongTools Site Registry © 2026</p>
+        <div className="flex justify-center gap-8 text-[9px] font-black uppercase tracking-widest text-white/10">
+            <a href="#/privacy" className="hover:text-[#D4AF37] transition-colors">Privacy Protocol</a>
+            <a href="#/terms" className="hover:text-[#D4AF37] transition-colors">Terms of Service</a>
+        </div>
+      </footer>
+
+      {/* MODAL SYSTEM */}
+      <ToolModal 
+        isOpen={!!activeToolId} 
+        onClose={() => setActiveToolId(null)} 
+        title={activeTool ? activeTool.name : ''} 
+        toolId={activeToolId || ''}
+      >
         {activeToolId && renderToolLogic(activeToolId)}
       </ToolModal>
     </div>
