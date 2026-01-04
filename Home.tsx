@@ -44,7 +44,7 @@ const getCycleSeed = () => {
     return new Date().getDate().toString().padStart(4, '0');
 };
 
-// Tool Execution Engine
+// Tool Execution Engine - Handles routing to the correct component
 export const renderToolLogic = (id: string) => {
   switch (id) {
     case 'weather-live': 
@@ -75,15 +75,15 @@ export const renderToolLogic = (id: string) => {
       </div>
     );
     default: return (
-      <div className="text-center py-10 opacity-20">
-        <Zap size={48} className="mx-auto mb-2 text-[#D4AF37]" />
+      <div className="text-center py-20 opacity-20">
+        <Zap size={48} className="mx-auto mb-4 text-[#D4AF37]" />
         <p className="text-[10px] uppercase font-black tracking-widest">Accessing Secure Module...</p>
       </div>
     );
   }
 };
 
-/** INTERNAL CORE TOOLS **/
+/** INTERNAL CORE TOOLS (Simplified Utilities) **/
 const BasicCalcTool: React.FC = () => {
   const [val, setVal] = useState('0');
   const add = (v: string) => setVal(p => (p === '0' || p === 'Error' ? v : p + v));
@@ -121,13 +121,13 @@ const UnitConvTool: React.FC = () => {
     else setResult(`${((v * 9/5) + 32).toLocaleString('en-US', opt)} °F`);
   }, [input, type]);
   return (
-    <div className="max-w-xs mx-auto space-y-4">
+    <div className="max-w-xs mx-auto space-y-4 text-white">
       <div className="flex justify-around gap-2 mb-4">
         {['length', 'weight', 'temp'].map(t => (
           <button key={t} onClick={() => setType(t)} className={`px-3 py-1 rounded-full text-[9px] font-black uppercase border ${type === t ? 'bg-[#D4AF37] text-black' : 'bg-white/5 text-white/40'}`}>{t}</button>
         ))}
       </div>
-      <input type="number" value={input} onChange={(e) => setInput(e.target.value)} className="w-full bg-black border border-white/10 rounded-xl p-4 text-[#D4AF37] font-bold" />
+      <input type="number" value={input} onChange={(e) => setInput(e.target.value)} className="w-full bg-black border border-white/10 rounded-xl p-4 text-[#D4AF37] font-bold focus:outline-none" />
       <div className="p-4 bg-black/60 border border-[#D4AF37]/20 rounded-xl text-center text-white font-black">{result}</div>
     </div>
   );
@@ -143,7 +143,7 @@ const PasswordForgeTool: React.FC = () => {
   return (
     <div className="max-w-xs mx-auto space-y-6 text-center">
       <div className="bg-black/60 p-4 rounded-xl text-[#D4AF37] font-mono break-all border border-white/5">{pwd}</div>
-      <button onClick={gen} className="w-full bg-[#D4AF37] text-black p-3 rounded-xl font-black uppercase text-[10px] tracking-widest">Forge New Cipher</button>
+      <button onClick={gen} className="w-full bg-[#D4AF37] text-black p-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:scale-105 transition-transform">Forge New Cipher</button>
     </div>
   );
 };
@@ -187,7 +187,7 @@ export const Home: React.FC = () => {
   return (
     <div className="pb-32 px-4 sm:px-6 lg:px-8 overflow-x-hidden text-white bg-[#050505] selection:bg-[#D4AF37] selection:text-black">
       
-      {/* HERO SECTION */}
+      {/* HERO SECTION - INSTITUTIONAL BRANDING */}
       <section className="pt-32 pb-24 text-center">
         <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-black uppercase tracking-[0.6em] mb-12 shadow-2xl animate-pulse">
           <ShieldCheck size={16} /> Registry Access: Tier 1 Secured
@@ -225,7 +225,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* THE VAULT INDEX */}
+      {/* TOOL INDEX GRID */}
       <section className="max-w-7xl mx-auto mb-48 space-y-20">
         <div className="flex items-center gap-8">
           <Landmark className="text-[#D4AF37]" size={32} />
@@ -261,7 +261,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* DAILY CHRONICLES */}
+      {/* DAILY CHRONICLES - AI CONTENT */}
       <section className="max-w-7xl mx-auto mb-40 space-y-20">
         <div className="flex items-center gap-8">
           <ScrollText className="text-[#D4AF37]" size={32} />
@@ -274,7 +274,7 @@ export const Home: React.FC = () => {
         {loadingChronicles ? (
           <div className="py-40 text-center space-y-6">
             <Loader2 className="animate-spin mx-auto text-[#D4AF37]" size={56} strokeWidth={1} />
-            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-[#D4AF37] animate-pulse">Syncing with Knowledge Nodes...</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-[#D4AF37] animate-pulse">Syncing Knowledge Nodes...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -290,7 +290,7 @@ export const Home: React.FC = () => {
                   </div>
                   <h3 className="text-2xl font-black text-white group-hover:text-[#D4AF37] mb-6 italic uppercase tracking-tighter leading-none transition-colors">{record.title}</h3>
                   <div 
-                    className="text-white/40 text-base italic leading-relaxed opacity-70" 
+                    className="text-white/40 text-base italic leading-relaxed opacity-70 prose-sm" 
                     dangerouslySetInnerHTML={{ __html: record.content.substring(0, 180) + '...' }} 
                   />
                 </div>
@@ -304,6 +304,7 @@ export const Home: React.FC = () => {
         )}
       </section>
 
+      {/* FOOTER */}
       <footer className="max-w-7xl mx-auto pt-24 border-t border-white/5 text-center">
         <p className="text-[10px] font-black uppercase tracking-[0.8em] text-white/20 mb-4">StrongTools Registry © 2026</p>
         <div className="flex justify-center gap-8 text-[9px] font-black uppercase tracking-widest text-white/10">
@@ -312,6 +313,7 @@ export const Home: React.FC = () => {
         </div>
       </footer>
 
+      {/* MODAL SYSTEM */}
       <ToolModal 
         isOpen={!!activeToolId} 
         onClose={() => setActiveToolId(null)} 
