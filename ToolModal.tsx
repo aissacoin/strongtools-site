@@ -1,12 +1,12 @@
-
 import React from 'react';
-import { X, Sparkles, Loader2, ShieldCheck, ScrollText, AlertTriangle, History, RefreshCw, Bookmark } from 'lucide-react';
+import { X, Sparkles, Loader2, ShieldCheck, ScrollText, AlertTriangle, History, Bookmark } from 'lucide-react';
 import { getAutomatedArchive, ArchivalRecord } from "./geminiService";
+
 interface ToolModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  toolId?: string; // Added to facilitate better lookup
+  toolId?: string;
   children: React.ReactNode;
 }
 
@@ -21,8 +21,11 @@ export const ToolModal: React.FC<ToolModalProps> = ({ isOpen, onClose, title, to
     setError(false);
     try {
       const data = await getAutomatedArchive(toolId);
-      if (data) setArchive(data);
-      else throw new Error("Registry empty");
+      if (data) {
+        setArchive(data);
+      } else {
+        throw new Error("Registry empty");
+      }
     } catch (e) {
       console.error("Registry Sync Failure:", e);
       setError(true);
@@ -35,99 +38,101 @@ export const ToolModal: React.FC<ToolModalProps> = ({ isOpen, onClose, title, to
     if (isOpen && toolId) {
       syncArchive();
     }
+    // Reset archive when closing to prevent data flicker
+    if (!isOpen) {
+      setArchive(null);
+    }
   }, [isOpen, toolId, syncArchive]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#000000]/95 backdrop-blur-md">
-      <div className="bg-[var(--bg-deep)] border-2 border-[var(--border-glow)] rounded-[4rem] w-full max-w-5xl shadow-[0_0_120px_rgba(0,0,0,0.9)] overflow-hidden animate-in fade-in zoom-in duration-500 flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+      <div className="bg-[#0a0a0a] border-2 border-[#D4AF37]/20 rounded-[4rem] w-full max-w-5xl shadow-[0_0_150px_rgba(0,0,0,1)] overflow-hidden animate-in fade-in zoom-in duration-500 flex flex-col max-h-[94vh]">
         
-        {/* Header */}
-        <div className="px-12 py-8 border-b border-[var(--border-glow)] flex justify-between items-center bg-[var(--bg-main)]">
+        {/* INSTITUTIONAL HEADER */}
+        <div className="px-12 py-10 border-b border-white/5 flex justify-between items-center bg-black/40">
           <div className="flex items-center gap-6">
-             <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 flex items-center justify-center text-[var(--accent)] border border-[var(--accent)]/20">
-               <Sparkles size={24} />
+             <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] border border-[#D4AF37]/20 shadow-[0_0_20px_rgba(212,175,55,0.1)]">
+               <Sparkles size={28} strokeWidth={1.5} />
              </div>
              <div>
-               <h3 className="text-3xl font-black text-white tracking-tighter leading-none">{title}</h3>
-               <div className="flex items-center gap-3 mt-1 text-[var(--accent)]/50">
-                 <ShieldCheck size={12} />
-                 <span className="text-[9px] font-black uppercase tracking-[0.5em]">Verified Utility Meridian</span>
+               <h3 className="text-3xl font-black text-white tracking-tighter leading-none uppercase italic">{title}</h3>
+               <div className="flex items-center gap-3 mt-2 text-[#D4AF37]/50">
+                 <ShieldCheck size={14} />
+                 <span className="text-[10px] font-black uppercase tracking-[0.6em] italic">Verified Utility Meridian</span>
                </div>
              </div>
           </div>
-          <button onClick={onClose} className="p-3 bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/20 rounded-xl transition-all">
-            <X size={24} className="text-rose-400" />
+          <button 
+            onClick={onClose} 
+            className="p-4 bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/10 rounded-[1.5rem] transition-all group"
+          >
+            <X size={24} className="text-rose-400/50 group-hover:text-rose-400 group-hover:rotate-90 transition-all duration-500" />
           </button>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="p-8 md:p-12 overflow-y-auto custom-scrollbar flex-grow bg-gradient-to-b from-transparent to-black/40">
-          <div className="max-w-4xl mx-auto space-y-16">
+        {/* VAULT CONTENT AREA */}
+        <div className="p-8 md:p-16 overflow-y-auto custom-scrollbar flex-grow bg-gradient-to-b from-transparent to-[#D4AF37]/5">
+          <div className="max-w-4xl mx-auto space-y-20">
             
-            {/* Tool Interactive Interface */}
-            <section className="relative p-8 bg-white/[0.02] border border-white/5 rounded-[3rem] shadow-inner">
-               {children}
+            {/* ACTIVE INTERFACE MODULE */}
+            <section className="relative p-1 bg-gradient-to-br from-[#D4AF37]/20 to-transparent rounded-[3.5rem]">
+              <div className="bg-[#050505] p-10 md:p-14 rounded-[3.4rem] border border-white/5 shadow-2xl">
+                 <p className="text-[9px] text-[#D4AF37]/40 font-black uppercase tracking-[1em] mb-10 text-center italic">Interactive Interface Module</p>
+                 {children}
+              </div>
             </section>
 
-            {/* Content Logic */}
-            <section className="space-y-10">
-              <div className="flex items-center gap-6">
-                <ScrollText className="text-[var(--accent)]" size={24} />
-                <h4 className="text-xs font-black uppercase tracking-[0.4em] text-white">The Archival Manuscript</h4>
-                <div className="flex-grow h-px bg-gradient-to-r from-[var(--accent)]/20 to-transparent"></div>
+            {/* ARCHIVAL MANUSCRIPT SECTION */}
+            <section className="space-y-12 pb-10">
+              <div className="flex items-center gap-8">
+                <ScrollText className="text-[#D4AF37]" size={28} strokeWidth={1.5} />
+                <h4 className="text-xs font-black uppercase tracking-[0.5em] text-white/60 italic">Archival Manuscript</h4>
+                <div className="flex-grow h-px bg-gradient-to-r from-[#D4AF37]/30 to-transparent"></div>
               </div>
 
               {loading ? (
-                <div className="py-24 text-center space-y-6">
-                  <Loader2 className="animate-spin mx-auto text-[var(--accent)]" size={48} />
-                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--accent)] animate-pulse">Re-Indexing Sovereign Knowledge Nodes...</p>
+                <div className="py-32 text-center space-y-8 rounded-[3rem] bg-white/[0.01] border border-white/5">
+                  <Loader2 className="animate-spin mx-auto text-[#D4AF37]" size={56} strokeWidth={1} />
+                  <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#D4AF37] animate-pulse italic">Synchronizing Knowledge Nodes...</p>
                 </div>
               ) : error ? (
-                <div className="p-12 bg-rose-500/5 border-2 border-dashed border-rose-500/20 rounded-[3rem] text-center space-y-6">
-                   <AlertTriangle className="mx-auto text-rose-400 opacity-40" size={40} />
-                   <p className="text-sm font-bold text-white italic">Registry synchronization latency detected.</p>
-                   <button onClick={syncArchive} className="px-8 py-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-rose-500/20 transition-all">
-                     Retry Handshake
+                <div className="p-16 bg-rose-500/5 border-2 border-dashed border-rose-500/10 rounded-[4rem] text-center space-y-8">
+                   <AlertTriangle className="mx-auto text-rose-400/30" size={48} />
+                   <p className="text-sm font-bold text-white/60 italic uppercase tracking-widest">Registry synchronization protocol failed.</p>
+                   <button 
+                     onClick={syncArchive} 
+                     className="px-10 py-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-rose-500/20 transition-all italic"
+                   >
+                     Restart Handshake
                    </button>
                 </div>
               ) : archive ? (
-                <article className="animate-in fade-in duration-1000">
+                <article className="animate-in fade-in slide-in-from-bottom-10 duration-1000">
                   {archive.imageUrl && (
-                    <div className="h-64 rounded-[2.5rem] overflow-hidden mb-12 border border-white/10 group relative">
-                      <img src={archive.imageUrl} className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[10s]" alt="Contextual Imagery" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-deep)] to-transparent"></div>
+                    <div className="h-80 rounded-[3rem] overflow-hidden mb-16 border border-white/10 relative group">
+                      <img 
+                        src={archive.imageUrl} 
+                        className="w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-[20s]" 
+                        alt="Technical Dossier Visual" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent"></div>
                     </div>
                   )}
 
-                  <div className="glass-3d p-12 rounded-[3.5rem] bg-white/[0.01]">
-                    <h2 className="text-4xl font-black text-[#D4AF37] mb-10 italic font-serif-scholarly leading-tight">{archive.title}</h2>
+                  <div className="p-14 rounded-[4rem] bg-white/[0.02] border border-white/5 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none">
+                      <Sparkles size={160} />
+                    </div>
+                    
+                    <h2 className="text-5xl font-black text-white mb-10 italic tracking-tighter leading-tight uppercase">
+                      {archive.title}
+                    </h2>
+                    
                     <div 
-                      className="prose-archive selection:bg-[#D4AF37] selection:text-black"
+                      className="prose-dossier text-white/50 text-xl leading-[1.8] italic font-medium selection:bg-[#D4AF37] selection:text-black"
                       dangerouslySetInnerHTML={{ __html: archive.content }}
                     />
                     
-                    <div className="mt-16 pt-8 border-t border-white/5 flex flex-wrap items-center gap-6 opacity-40">
-                      <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest"><History size={14}/> Cycle: {archive.cycle}</div>
-                      <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest"><Bookmark size={14}/> Node: {archive.type}</div>
-                      <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest"><ShieldCheck size={14}/> Verified Archive</div>
-                    </div>
-                  </div>
-                </article>
-              ) : null}
-            </section>
-          </div>
-        </div>
-
-        {/* Footer Taskbar */}
-        <div className="px-12 py-4 bg-black/60 border-t border-[var(--border-glow)] flex items-center justify-between">
-           <span className="text-[9px] font-black uppercase tracking-[0.5em] text-[var(--accent)]/40 italic">StrongTools • High-Fidelity Knowledge Registry</span>
-           <div className="flex gap-1">
-             {[1,2,3].map(i => <div key={i} className="w-1 h-1 rounded-full bg-[var(--accent)]/20"></div>)}
-           </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+                    <div
