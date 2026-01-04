@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { 
-  Clock, History, Zap, Quote, Landmark, 
-  QrCode, ScrollText, Loader2 
+  Clock, History, Zap, Landmark, 
+  Terminal, ShieldCheck, Activity, Cpu 
 } from 'lucide-react';
 
-// استيراد الأدوات من نفس المجلد (src)
+// Importing Components from the same directory
 import { BMICalculator } from './BMICalculator';
 import { WordCounter } from './WordCounter';
 import { AgeCalc } from './AgeCalc';
@@ -36,45 +36,76 @@ export const Home: React.FC = () => {
       case 'birth-watch': return <BirthWatchTool />;
       case 'morse-code': return <MorseCodeTool />;
       case 'pwd-gen': return <PasswordForgeTool />;
-      default: return <div className="text-center opacity-20 italic">Module loading...</div>;
+      default: return (
+        <div className="flex flex-col items-center justify-center p-12 opacity-20 italic">
+          <Cpu className="animate-spin mb-4" />
+          <p className="text-xs uppercase tracking-widest font-black">Initializing Module...</p>
+        </div>
+      );
     }
   };
 
   const activeTool = TOOLS.find(t => t.id === activeToolId);
 
   return (
-    <div className="pb-32 px-4 sm:px-6 lg:px-8 text-white font-sans bg-[#050505]">
-      {/* Hero Section */}
-      <section className="pt-20 pb-24 text-center">
-        <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-black uppercase tracking-[0.5em] mb-12">
-          <Zap size={14} /> Registry V4.2 Secured
+    <div className="pb-32 px-4 sm:px-6 lg:px-8 text-white font-sans bg-[#050505] selection:bg-[#D4AF37] selection:text-black">
+      
+      {/* HERO SECTION */}
+      <section className="pt-24 pb-32 text-center relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4AF37]/5 via-transparent to-transparent opacity-50 pointer-events-none" />
+        
+        <div className="relative z-10">
+          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-[9px] font-black uppercase tracking-[0.6em] mb-12 animate-pulse">
+            <ShieldCheck size={12} /> System Protocol V4.2 Secured
+          </div>
+          
+          <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-8 italic uppercase leading-[0.85]">
+            The <span className="text-[#D4AF37]">Ultimate</span><br/>
+            <span className="text-white/90">Utility Vault</span>
+          </h1>
+          
+          <p className="text-white/30 text-xs md:text-sm font-bold uppercase tracking-[0.4em] max-w-2xl mx-auto leading-relaxed">
+            Professional precision instruments curated for the digital avant-garde.
+          </p>
         </div>
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-6 italic uppercase">
-          The <span className="text-[#D4AF37]">Ultimate</span><br/>Utility Vault
-        </h1>
       </section>
 
-      {/* Stats Dashboard */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
-        <div className="bg-white/5 p-10 rounded-[3rem] border border-white/5 flex flex-col items-center">
-          <Clock className="text-[#D4AF37] mb-4" />
-          <div className="text-5xl font-black tabular-nums">
-            {currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}
+      {/* DASHBOARD METRICS */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
+        {/* Time Module */}
+        <div className="bg-white/[0.03] p-12 rounded-[3.5rem] border border-white/5 flex flex-col items-center justify-center hover:bg-white/[0.05] transition-colors group">
+          <Clock className="text-[#D4AF37] mb-6 group-hover:rotate-12 transition-transform" size={28} />
+          <div className="text-6xl font-black tabular-nums tracking-tighter italic">
+            {currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
           </div>
-          <p className="text-[10px] uppercase tracking-widest opacity-30 mt-2">Temporal Node</p>
+          <p className="text-[9px] uppercase tracking-[0.5em] text-white/20 font-black mt-4">Temporal Coordinate</p>
         </div>
         
-        <div className="md:col-span-2 bg-white/5 p-10 rounded-[3rem] border-2 border-[#D4AF37]/20 flex flex-col justify-center italic">
-          <History className="text-[#D4AF37] mb-2" size={20} />
-          <p className="text-2xl font-bold opacity-80">System Pulse: Optimized for Global Operations</p>
+        {/* Status Module */}
+        <div className="md:col-span-2 bg-white/[0.03] p-12 rounded-[3.5rem] border-2 border-[#D4AF37]/10 flex flex-col justify-center relative overflow-hidden group">
+          <div className="absolute right-0 top-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
+            <Activity size={120} />
+          </div>
+          <div className="flex items-center gap-4 mb-4">
+            <History className="text-[#D4AF37]" size={20} />
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37]">Live System Pulse</span>
+          </div>
+          <p className="text-3xl font-black uppercase italic leading-tight max-w-md">
+            Optimized for <span className="text-[#D4AF37]">Global</span> Operations & Performance.
+          </p>
         </div>
       </div>
 
-      {/* Index Grid */}
-      <section className="max-w-7xl mx-auto space-y-12">
-        <div className="flex items-center gap-4">
-          <Landmark className="text-[#D4AF37]" />
-          <h2 className="text-2xl font-black uppercase tracking-widest">The Vault Index</h2>
+      {/* TOOL GRID */}
+      <section className="max-w-7xl mx-auto space-y-16">
+        <div className="flex items-center justify-between border-b border-white/5 pb-8">
+          <div className="flex items-center gap-4">
+            <Landmark className="text-[#D4AF37]" size={24} />
+            <h2 className="text-3xl font-black uppercase italic tracking-tighter">The Vault Index</h2>
+          </div>
+          <div className="hidden md:flex items-center gap-2 text-white/20 text-[10px] font-black uppercase tracking-widest">
+            <Terminal size={14} /> Ready for Input
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -84,27 +115,41 @@ export const Home: React.FC = () => {
               <div 
                 key={tool.id} 
                 onClick={() => setActiveToolId(tool.id)}
-                className="group bg-white/5 p-8 rounded-[2.5rem] border border-white/10 hover:border-[#D4AF37]/50 cursor-pointer transition-all hover:bg-[#D4AF37]/5"
+                className="group relative bg-white/[0.03] p-10 rounded-[3rem] border border-white/10 hover:border-[#D4AF37]/40 cursor-pointer transition-all duration-500 hover:-translate-y-2 shadow-2xl overflow-hidden"
               >
-                <div className="w-14 h-14 bg-black/40 rounded-2xl flex items-center justify-center text-[#D4AF37] mb-6 group-hover:scale-110 transition-transform">
-                  <Icon size={24} />
+                {/* Decoration */}
+                <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#D4AF37]/5 rounded-full blur-3xl group-hover:bg-[#D4AF37]/10 transition-colors" />
+                
+                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center text-[#D4AF37] mb-8 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 border border-white/5 shadow-xl">
+                  <Icon size={28} />
                 </div>
-                <h3 className="text-xl font-black uppercase italic mb-2">{tool.name}</h3>
-                <p className="text-[9px] uppercase tracking-widest opacity-30 font-bold">{tool.category}</p>
+                
+                <h3 className="text-2xl font-black uppercase italic mb-3 tracking-tighter group-hover:text-[#D4AF37] transition-colors">
+                  {tool.name}
+                </h3>
+                
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+                  <p className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-black">
+                    {tool.category}
+                  </p>
+                </div>
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* Modal Tool Rendering */}
+      {/* MODAL RENDERING */}
       <ToolModal 
         isOpen={!!activeToolId} 
         onClose={() => setActiveToolId(null)} 
         title={activeTool?.name || ''} 
         toolId={activeToolId || ''}
       >
-        {activeToolId && renderTool(activeToolId)}
+        <div className="py-6">
+          {activeToolId && renderTool(activeToolId)}
+        </div>
       </ToolModal>
     </div>
   );
