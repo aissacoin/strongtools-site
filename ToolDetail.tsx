@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowLeft, Share2, Info, Zap } from 'lucide-react';
 
-// Import your tool components
+// Import your tool components - Ensure these filenames match your actual files exactly
 import { BMICalculator } from './BMICalculator';
 import { AgeCalculator } from './AgeCalc';
 import { PasswordForgeTool } from './PasswordForgeTool';
@@ -15,8 +15,18 @@ interface ToolDetailProps {
 }
 
 export const ToolDetail: React.FC<ToolDetailProps> = ({ id }) => {
+  
   const goBack = () => {
     window.location.hash = '#/tools';
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("System Link Copied: Access protocol saved to clipboard.");
+  };
+
+  const handleInfo = () => {
+    alert("StrongTools Protocol: This instrument processes data locally for maximum security. No user data is stored on external servers.");
   };
 
   const renderTool = () => {
@@ -56,10 +66,16 @@ export const ToolDetail: React.FC<ToolDetailProps> = ({ id }) => {
           </button>
 
           <div className="flex gap-3">
-            <button className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-[#D4AF37]/50 transition-all group">
+            <button 
+              onClick={handleShare}
+              className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-[#D4AF37]/50 transition-all group"
+            >
               <Share2 size={16} className="text-gray-500 group-hover:text-[#D4AF37]" />
             </button>
-            <button className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-[#D4AF37]/50 transition-all group">
+            <button 
+              onClick={handleInfo}
+              className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-[#D4AF37]/50 transition-all group"
+            >
               <Info size={16} className="text-gray-500 group-hover:text-[#D4AF37]" />
             </button>
           </div>
