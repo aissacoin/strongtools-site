@@ -10,14 +10,16 @@ import { ToolModal } from './ToolModal';
 import { TOOLS } from './constants';
 import { getAutomatedArchive } from './geminiService';
 
-// Direct Component Imports - Updated Paths
+// Direct Component Imports
 import { BMICalculator } from './BMICalculator';
 import { WordCounter } from './WordCounter';
-import { AgeCalculator } from './AgeCalc'; // Updated to match renamed file
+import { AgeCalc } from './AgeCalc'; 
 import { PercentageCalc } from './PercentageCalc';
 import { MorseCodeTool } from './MorseCodeTool';
 import { WeatherLive } from './WeatherLive';
 import { BirthWatchTool } from './BirthWatchTool';
+import { BinaryConverter } from './BinaryConverter';
+import { StopwatchTimer } from './StopwatchTimer';
 
 interface ArchivalRecord {
   title: string;
@@ -42,25 +44,31 @@ const getCycleSeed = () => {
     return new Date().getDate().toString().padStart(4, '0');
 };
 
-// Tool Execution Engine - MATCHED WITH IDs in constants.ts
+// Tool Execution Engine
 export const renderToolLogic = (id: string) => {
   switch (id) {
-    case 'weather-live':   return <WeatherLive />;
-    case 'bmi-calc':       return <BMICalculator />;
-    case 'scribe-counter': return <WordCounter />;
-    case 'basic-calc':     return <BasicCalcTool />;
-    case 'perc-calc':      return <PercentageCalc />;
-    case 'age-calc':       return <AgeCalculator />;
-    case 'birth-watch':    return <BirthWatchTool />;
-    case 'morse-code':     return <MorseCodeTool />;
-    case 'unit-conv':      return <UnitConvTool />;
-    case 'pwd-gen':        return <PasswordForgeTool />;
+    case 'weather-live': 
+    case 'real-time-weather':   return <WeatherLive />;
+    case 'bmi-calc':            return <BMICalculator />;
+    case 'scribe-counter':      return <WordCounter />;
+    case 'perc-calc':           return <PercentageCalc />;
+    case 'age-calc':            return <AgeCalc />;
+    case 'birth-watch': 
+    case 'birth-year-history':  return <BirthWatchTool />;
+    case 'morse-code':          return <MorseCodeTool />;
+    case 'text-to-binary':
+    case 'binary-conv':         return <BinaryConverter />;
+    case 'stopwatch-timer':
+    case 'countdown-timer':     return <StopwatchTimer />;
+    case 'pwd-gen':             return <PasswordForgeTool />;
+    case 'unit-conv':           return <UnitConvTool />;
+    case 'basic-calc':          return <BasicCalcTool />;
     case 'qr-gen': return (
       <div className="text-center p-8 bg-black/40 rounded-[2rem] border border-[#D4AF37]/20">
         <QrCode className="mx-auto text-[#D4AF37] mb-4" size={48} />
-        <p className="text-sm font-bold text-white mb-4 italic uppercase tracking-widest">StrongTools QR Generator</p>
+        <p className="text-sm font-bold text-white mb-4 italic uppercase tracking-widest">Vault QR Generator</p>
         <img 
-          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('https://strongtools.site')}`} 
+          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('https://aissacoin.github.io/strongtools-site/')}`} 
           className="mx-auto bg-white p-2 rounded-xl" 
           alt="QR Code" 
         />
@@ -68,17 +76,14 @@ export const renderToolLogic = (id: string) => {
     );
     default: return (
       <div className="text-center py-10 opacity-20">
-        <Zap size={48} className="mx-auto mb-2" />
+        <Zap size={48} className="mx-auto mb-2 text-[#D4AF37]" />
         <p className="text-[10px] uppercase font-black tracking-widest">Accessing Secure Module...</p>
       </div>
     );
   }
 };
 
-/** * INTERNAL CORE TOOLS 
- * These are small tools rendered directly within the home vault 
- */
-
+/** INTERNAL CORE TOOLS **/
 const BasicCalcTool: React.FC = () => {
   const [val, setVal] = useState('0');
   const add = (v: string) => setVal(p => (p === '0' || p === 'Error' ? v : p + v));
@@ -165,7 +170,6 @@ export const Home: React.FC = () => {
     const fetchHomeChronicles = async () => {
       setLoadingChronicles(true);
       try {
-        // Fetch specific featured tools for the landing page chronicles
         const featuredIds = ['weather-live', 'bmi-calc', 'scribe-counter'];
         const results = await Promise.all(featuredIds.map(id => getAutomatedArchive(id)));
         setChronicles(results.filter((r): r is ArchivalRecord => r !== null));
@@ -183,7 +187,7 @@ export const Home: React.FC = () => {
   return (
     <div className="pb-32 px-4 sm:px-6 lg:px-8 overflow-x-hidden text-white bg-[#050505] selection:bg-[#D4AF37] selection:text-black">
       
-      {/* HERO SECTION - INSTITUTIONAL BRANDING */}
+      {/* HERO SECTION */}
       <section className="pt-32 pb-24 text-center">
         <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-black uppercase tracking-[0.6em] mb-12 shadow-2xl animate-pulse">
           <ShieldCheck size={16} /> Registry Access: Tier 1 Secured
@@ -221,7 +225,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* TOOL INDEX GRID - THE MAIN VAULT */}
+      {/* THE VAULT INDEX */}
       <section className="max-w-7xl mx-auto mb-48 space-y-20">
         <div className="flex items-center gap-8">
           <Landmark className="text-[#D4AF37]" size={32} />
@@ -257,7 +261,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* AUTOMATED DAILY CHRONICLES - AI POWERED CONTENT */}
+      {/* DAILY CHRONICLES */}
       <section className="max-w-7xl mx-auto mb-40 space-y-20">
         <div className="flex items-center gap-8">
           <ScrollText className="text-[#D4AF37]" size={32} />
@@ -270,7 +274,7 @@ export const Home: React.FC = () => {
         {loadingChronicles ? (
           <div className="py-40 text-center space-y-6">
             <Loader2 className="animate-spin mx-auto text-[#D4AF37]" size={56} strokeWidth={1} />
-            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-[#D4AF37] animate-pulse">Syncing with Decentralized Knowledge Nodes...</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-[#D4AF37] animate-pulse">Syncing with Knowledge Nodes...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -286,7 +290,7 @@ export const Home: React.FC = () => {
                   </div>
                   <h3 className="text-2xl font-black text-white group-hover:text-[#D4AF37] mb-6 italic uppercase tracking-tighter leading-none transition-colors">{record.title}</h3>
                   <div 
-                    className="text-white/40 text-base italic leading-relaxed opacity-70 prose-sm" 
+                    className="text-white/40 text-base italic leading-relaxed opacity-70" 
                     dangerouslySetInnerHTML={{ __html: record.content.substring(0, 180) + '...' }} 
                   />
                 </div>
@@ -300,16 +304,14 @@ export const Home: React.FC = () => {
         )}
       </section>
 
-      {/* GLOBAL FOOTER BRANDING */}
       <footer className="max-w-7xl mx-auto pt-24 border-t border-white/5 text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.8em] text-white/20 mb-4">StrongTools Site Registry © 2026</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.8em] text-white/20 mb-4">StrongTools Registry © 2026</p>
         <div className="flex justify-center gap-8 text-[9px] font-black uppercase tracking-widest text-white/10">
             <a href="#/privacy" className="hover:text-[#D4AF37] transition-colors">Privacy Protocol</a>
             <a href="#/terms" className="hover:text-[#D4AF37] transition-colors">Terms of Service</a>
         </div>
       </footer>
 
-      {/* MODAL SYSTEM */}
       <ToolModal 
         isOpen={!!activeToolId} 
         onClose={() => setActiveToolId(null)} 
