@@ -8,6 +8,7 @@ import { AgeCalculator } from './AgeCalc';
 import { PasswordForgeTool } from './PasswordForgeTool';
 import { BirthWatchTool } from './BirthWatchTool';
 import { WeatherLive } from './WeatherLive';
+import { WordCounter } from './WordCounter'; // Added this as we created it earlier
 
 import { 
   ArrowLeft, 
@@ -45,14 +46,15 @@ export const ToolDetail: React.FC<ToolDetailProps> = ({ id, initialDate }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 2. Logic to render the specific interactive tool
+  // 2. Logic to render the specific interactive tool - MATCHED WITH constants.ts
   const renderToolInterface = () => {
     switch (id) {
-      case 'bmi-calculator': return <BMICalculator />;
-      case 'age-calculator': return <AgeCalculator />;
-      case 'password-forge': return <PasswordForgeTool />;
-      case 'birth-watch':    return <BirthWatchTool />;
-      case 'weather-live':   return <WeatherLive />;
+      case 'bmi-calc': return <BMICalculator />;
+      case 'age-calc': return <AgeCalculator />;
+      case 'pwd-gen': return <PasswordForgeTool />;
+      case 'birth-watch': return <BirthWatchTool />;
+      case 'weather-live': return <WeatherLive />;
+      case 'scribe-counter': return <WordCounter />;
       default:
         return (
           <div className="text-center py-20 opacity-20 italic">
@@ -70,12 +72,12 @@ export const ToolDetail: React.FC<ToolDetailProps> = ({ id, initialDate }) => {
 
     try {
       // Synchronizing with AI Registry
-      const data = await getAutomatedArchive(tool.id, tool.title, tool.description);
+      const data = await getAutomatedArchive(tool.id);
       if (!data) throw new Error("Registry synchronization protocol failed.");
       setArchiveData(data);
 
       // Fetching Visual Assets
-      const query = encodeURIComponent(`${tool.title} technical digital luxury`);
+      const query = encodeURIComponent(`${tool.name} technical digital luxury`);
       const pixabayUrl = `https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3`;
       
       const imgResponse = await fetch(pixabayUrl);
@@ -122,7 +124,7 @@ export const ToolDetail: React.FC<ToolDetailProps> = ({ id, initialDate }) => {
             <ShieldCheck size={14} className="text-[#D4AF37]" /> Verified Instrument
           </div>
           <h1 className="text-6xl md:text-9xl font-black text-white uppercase tracking-tighter italic leading-none">
-            {tool.title}
+            {tool.name}
           </h1>
           <p className="text-xl md:text-2xl text-white/40 italic max-w-3xl mx-auto font-medium leading-relaxed">
             "{tool.description}"
@@ -159,91 +161,4 @@ export const ToolDetail: React.FC<ToolDetailProps> = ({ id, initialDate }) => {
             {isLoading ? (
               <div className="py-48 text-center space-y-10 rounded-[4rem] bg-white/[0.02] border border-white/5 relative overflow-hidden">
                 <Loader2 className="animate-spin mx-auto text-[#D4AF37]" size={72} strokeWidth={1} />
-                <p className="text-[10px] font-black uppercase tracking-[0.6em] text-[#D4AF37] animate-pulse">Synchronizing with Master Archive Nodes...</p>
-              </div>
-            ) : error ? (
-              <div className="py-24 text-center bg-rose-500/5 border-2 border-dashed border-rose-500/20 rounded-[4rem] space-y-8">
-                  <AlertTriangle size={56} className="mx-auto text-rose-500/30 animate-bounce" />
-                  <p className="text-rose-400 font-black uppercase tracking-[0.3em] text-sm">{error}</p>
-              </div>
-            ) : archiveData ? (
-              <article className="animate-in fade-in slide-in-from-bottom-16 duration-1000">
-                {imageUrl && (
-                  <div className="rounded-[4rem] overflow-hidden mb-20 border border-white/5 h-[500px] relative group shadow-2xl">
-                    <img src={imageUrl} className="w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-[20s]" alt="Visual Dossier" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent opacity-80"></div>
-                  </div>
-                )}
-
-                <div className="space-y-16">
-                  <h3 className="text-5xl md:text-7xl font-black text-white italic leading-[0.9] tracking-tighter">
-                    {archiveData.articleTitle}
-                  </h3>
-                  <div 
-                    className="prose-dossier text-white/60 text-xl leading-[1.8] italic font-medium"
-                    dangerouslySetInnerHTML={{ __html: archiveData.mainContent }}
-                  />
-
-                  {/* HISTORICAL NODE */}
-                  <div className="mt-24 p-14 bg-[#D4AF37]/5 border-l-4 border-[#D4AF37] rounded-r-[3rem] relative group shadow-inner">
-                    <h4 className="text-[#D4AF37] font-black uppercase text-[10px] tracking-[0.4em] mb-8">Evolutionary Context</h4>
-                    <p className="italic text-white/80 leading-relaxed text-2xl font-black tracking-tight">
-                      {archiveData.history}
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ PROTOCOL */}
-                <section className="mt-40 space-y-16">
-                  <div className="flex items-center gap-6">
-                    <HelpCircle className="text-[#D4AF37]" size={32} />
-                    <h3 className="text-3xl font-black uppercase tracking-tighter italic">Inquiry <span className="text-[#D4AF37]">Protocol</span></h3>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    {archiveData.faqs.map((faq: any, i: number) => (
-                      <div key={i} className="p-12 bg-white/[0.02] border border-white/5 rounded-[3.5rem] hover:border-[#D4AF37]/30 transition-all duration-500 hover:bg-white/[0.04]">
-                        <p className="text-[#D4AF37] font-black text-xl mb-6 italic tracking-tight uppercase">Q: {faq.question}</p>
-                        <p className="text-white/40 leading-relaxed italic text-lg font-medium">A: {faq.answer}</p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              </article>
-            ) : null}
-          </main>
-
-          {/* SIDEBAR ANALYTICS */}
-          <aside className="lg:col-span-4">
-            <div className="p-12 rounded-[4rem] border border-white/5 sticky top-40 bg-white/[0.01] backdrop-blur-3xl space-y-10 shadow-2xl">
-              <div className="flex items-center gap-4 border-b border-white/5 pb-8">
-                <Activity size={24} className="text-[#D4AF37]" />
-                <h4 className="text-white font-black uppercase text-[12px] tracking-[0.3em]">Registry Status</h4>
-              </div>
-              
-              <div className="space-y-8">
-                {[
-                  { label: "Security Lvl", val: "Lvl 9 Vault" },
-                  { label: "Sync Status", val: "Live Connection" },
-                  { label: "Data Integrity", val: "Verified (AES-256)" },
-                  { label: "Format", val: "Standard Dossier" }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-center group">
-                    <span className="text-white/20 font-black text-[9px] uppercase tracking-widest">{item.label}</span>
-                    <span className="text-white font-black italic text-xs tracking-tight">{item.val}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pt-8 border-t border-white/5 text-center">
-                  <p className="text-white/30 text-[9px] leading-relaxed italic">
-                    Archival data is dynamically processed through decentralized knowledge nodes.
-                  </p>
-              </div>
-            </div>
-          </aside>
-        </div>
-
-      </div>
-    </div>
-  );
-};
+                <p className="text-[10px] font-black uppercase tracking-[0.6em] text-[#D4AF37] animate-pulse">Synchronizing
