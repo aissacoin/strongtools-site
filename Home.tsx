@@ -17,8 +17,6 @@ import { AgeCalc } from './AgeCalc';
 import { PercentageCalc } from './PercentageCalc';
 import { MorseCodeTool } from './MorseCodeTool';
 import { WeatherLive } from './WeatherLive';
-import { BirthWatchTool } from './BirthWatchTool';
-import { BinaryConverter } from './BinaryConverter';
 import { StopwatchTimer } from './StopwatchTimer';
 
 interface ArchivalRecord {
@@ -53,13 +51,8 @@ export const renderToolLogic = (id: string) => {
     case 'scribe-counter':      return <WordCounter />;
     case 'perc-calc':           return <PercentageCalc />;
     case 'age-calc':            return <AgeCalc />;
-    case 'birth-watch': 
-    case 'birth-year-history':  return <BirthWatchTool />;
     case 'morse-code':          return <MorseCodeTool />;
-    case 'text-to-binary':
-    case 'binary-conv':         return <BinaryConverter />;
-    case 'stopwatch-timer':
-    case 'countdown-timer':     return <StopwatchTimer />;
+    case 'stopwatch-timer':     return <StopwatchTimer />;
     case 'pwd-gen':             return <PasswordForgeTool />;
     case 'unit-conv':           return <UnitConvTool />;
     case 'basic-calc':          return <BasicCalcTool />;
