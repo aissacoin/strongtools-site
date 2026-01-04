@@ -14,17 +14,16 @@ import { Terms } from './src/Terms';
  * Enforcing English Global Constants
  */
 (window as any).CATEGORY_COLORS = {
-  security: '#3b82f6', // Premium Blue
-  utility: '#10b981',  // Success Green
-  coding: '#8b5cf6',   // Logic Purple
-  web: '#f59e0b',      // Web Orange
-  design: '#ec4899'    // Aesthetic Pink
+  security: '#D4AF37', 
+  utility: '#ffffff',  
+  coding: '#71717a',   
+  web: '#a1a1aa',      
+  design: '#D4AF37'    
 };
 
 export const App: React.FC = () => {
   const [currentHash, setCurrentHash] = React.useState(() => {
     try {
-      // Ensuring fallback to home on root access
       return typeof window !== 'undefined' ? window.location.hash || '#/' : '#/';
     } catch (e) {
       return '#/';
@@ -32,7 +31,6 @@ export const App: React.FC = () => {
   });
 
   React.useEffect(() => {
-    // Initial Route Sanitization
     const initHash = window.location.hash;
     if (!initHash || initHash === '#' || initHash === '') {
       window.location.replace('#/');
@@ -52,7 +50,6 @@ export const App: React.FC = () => {
   }, []);
 
   const renderContent = () => {
-    // Path normalization for English routing
     const path = currentHash.replace(/^#/, '') || '/';
 
     try {
@@ -64,15 +61,13 @@ export const App: React.FC = () => {
       if (path === '/tools') return <Tools />;
       if (path === '/blog') return <Blog />;
 
-      // Dynamic Blog Sub-routes
-      if (path.indexOf('/blog/') === 0) {
+      if (path.startsWith('/blog/')) {
         const parts = path.split('/').filter(Boolean);
         const blogId = parts[1] || '';
         return <BlogDetail id={blogId} />;
       }
 
-      // Dynamic Tool Sub-routes (Precision Registry)
-      if (path.indexOf('/tool/') === 0) {
+      if (path.startsWith('/tool/')) {
         const parts = path.split('/').filter(Boolean);
         const toolId = parts[1] || '';
         const fallbackDate = new Date().toISOString().slice(0, 10);
@@ -82,7 +77,7 @@ export const App: React.FC = () => {
 
       return <Home />;
     } catch (error) {
-      console.error("Critical Navigation Error, Resetting to Home:", error);
+      console.error("Critical Navigation Error:", error);
       return <Home />;
     }
   };
