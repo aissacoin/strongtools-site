@@ -6,7 +6,7 @@
     <title>StrongTools | Premium Digital Utility Archive</title>
     
     <script>
-        // Define Category Colors to prevent ReferenceError
+        // Global System Configuration
         window.CATEGORY_COLORS = {
             security: '#3b82f6',
             utility: '#10b981',
@@ -15,13 +15,13 @@
             design: '#ec4899'
         };
 
-        // Define missing getCycleSeed function
+        // Numerical Cycle Generator
         window.getCycleSeed = function() {
             try {
                 const now = new Date();
                 return now.getFullYear() + (now.getMonth() + 1) + now.getDate();
             } catch (e) {
-                return Math.floor(Math.random() * 1000);
+                return 2026;
             }
         };
     </script>
@@ -35,6 +35,9 @@
                 extend: {
                     colors: { 
                         accent: '#D4AF37' 
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                     }
                 }
             }
@@ -42,35 +45,43 @@
     </script>
     
     <style>
-        /* FORCE ENGLISH NUMBERS GLOBALLY */
+        /* IMPORTING HIGH-FIDELITY FONTS */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
 
         :root {
-            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-main: 'Inter', sans-serif;
         }
 
+        /* ABSOLUTE FORCE: WESTERN NUMERALS ONLY (123...) */
         * {
-            /* This forces tabular/western numerals across all browsers */
-            font-variant-numeric: tabular-nums;
-            -webkit-font-feature-settings: "tnum";
-            font-feature-settings: "tnum";
+            /* This disables automatic digit translation on mobile and web */
+            font-variant-numeric: tabular-nums lining-nums !important;
+            -webkit-font-feature-settings: "tnum" 1, "lnum" 1 !important;
+            font-feature-settings: "tnum" 1, "lnum" 1 !important;
         }
 
         body { 
             background-color: #050505; 
-            color: white; 
+            color: #ffffff; 
             margin: 0; 
             font-family: var(--font-main);
-            /* Prevents automatic number translation in certain regions */
-            unicode-range: U+0030-0039; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         #root { min-height: 100vh; }
 
-        /* Ensure inputs and calculations always use western digits */
-        input, button, span, div {
+        /* Force Inputs and Dynamic Text to ignore regional number settings */
+        input, button, span, div, p, h1, h2, h3, h4 {
             font-family: var(--font-main) !important;
+            font-variant-numeric: tabular-nums lining-nums;
         }
+
+        /* Custom Scrollbar for Luxury Aesthetic */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #D4AF3744; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
     </style>
 </head>
 <body>
@@ -79,12 +90,15 @@
     <script type="module" src="/index.tsx"></script>
 
     <script>
-        // Initialize icons after everything is loaded
+        // System Initialization: Lucide Icon Engine
         window.addEventListener('load', () => {
             if (window.lucide) {
                 lucide.createIcons();
             }
         });
+
+        // Prevention of regional digit substitution
+        document.documentElement.setAttribute('lang', 'en');
     </script>
 </body>
 </html>
