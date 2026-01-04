@@ -14,6 +14,7 @@ import { MorseCodeTool } from './MorseCodeTool';
 import { WeatherLive } from './WeatherLive';
 import { BirthWatchTool } from './BirthWatchTool';
 import { PasswordForgeTool } from './PasswordForgeTool';
+import { BinaryConverter } from './BinaryConverter'; // New Component
 import { ToolModal } from './ToolModal';
 import { TOOLS } from './constants';
 
@@ -26,21 +27,41 @@ export const Home: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Tool Logic Dispatcher
+  /**
+   * Tool Logic Dispatcher
+   * Maps tool IDs from constants.ts to their respective components
+   */
   const renderTool = (id: string) => {
     switch (id) {
-      case 'weather-live': return <WeatherLive />;
+      // Real-Time Weather Oracle
+      case 'weather-live': 
+      case 'real-time-weather':
+        return <WeatherLive />;
+
+      // Text to Binary Converter
+      case 'binary-conv':
+      case 'text-to-binary':
+        return <BinaryConverter />;
+
+      // Birth Year History Finder
+      case 'birth-watch':
+      case 'birth-year-history':
+        return <BirthWatchTool />;
+
+      // Standard Utility Tools
       case 'bmi-calc': return <BMICalculator />;
       case 'scribe-counter': return <WordCounter />;
       case 'perc-calc': return <PercentageCalc />;
       case 'age-calc': return <AgeCalc />;
-      case 'birth-watch': return <BirthWatchTool />;
       case 'morse-code': return <MorseCodeTool />;
       case 'pwd-gen': return <PasswordForgeTool />;
+      
+      // Fallback for tools in development
       default: return (
-        <div className="flex flex-col items-center justify-center p-12 opacity-20 italic">
-          <Cpu className="animate-spin mb-4" />
-          <p className="text-xs uppercase tracking-widest font-black">Initializing Module...</p>
+        <div className="flex flex-col items-center justify-center p-12 opacity-40 italic">
+          <Cpu className="animate-spin mb-4 text-[#D4AF37]" size={40} />
+          <p className="text-xs uppercase tracking-[0.4em] font-black">Synchronizing Module...</p>
+          <p className="text-[10px] mt-2 opacity-50">Authorized access only</p>
         </div>
       );
     }
@@ -53,7 +74,6 @@ export const Home: React.FC = () => {
       
       {/* HERO SECTION - INSTITUTIONAL BRANDING */}
       <section className="pt-24 pb-32 text-center relative overflow-hidden">
-        {/* Ambient Background Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4AF37]/5 via-transparent to-transparent opacity-50 pointer-events-none" />
         
         <div className="relative z-10">
@@ -72,9 +92,8 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* DASHBOARD METRICS - SYSTEM STATUS */}
+      {/* DASHBOARD METRICS */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
-        {/* Temporal Synchronizer */}
         <div className="bg-white/[0.03] p-12 rounded-[3.5rem] border border-white/5 flex flex-col items-center justify-center hover:bg-white/[0.05] transition-colors group shadow-2xl">
           <Clock className="text-[#D4AF37] mb-6 group-hover:rotate-12 transition-transform" size={28} />
           <div className="text-6xl font-black tabular-nums tracking-tighter italic">
@@ -83,7 +102,6 @@ export const Home: React.FC = () => {
           <p className="text-[9px] uppercase tracking-[0.5em] text-white/20 font-black mt-4">Universal Time Coordinate</p>
         </div>
         
-        {/* Performance & Status Module */}
         <div className="md:col-span-2 bg-white/[0.03] p-12 rounded-[3.5rem] border-2 border-[#D4AF37]/10 flex flex-col justify-center relative overflow-hidden group shadow-2xl">
           <div className="absolute right-0 top-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
             <Activity size={120} />
@@ -93,12 +111,12 @@ export const Home: React.FC = () => {
             <span className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37]">Active System Pulse</span>
           </div>
           <p className="text-3xl font-black uppercase italic leading-tight max-w-md">
-            Optimized for <span className="text-[#D4AF37]">Global Wonders</span> & Archival Excellence.
+            Optimized for <span className="text-[#D4AF37]">Global Operations</span> & Archival Excellence.
           </p>
         </div>
       </div>
 
-      {/* THE VAULT GRID - TOOL SELECTION */}
+      {/* THE VAULT GRID */}
       <section className="max-w-7xl mx-auto space-y-16">
         <div className="flex items-center justify-between border-b border-white/5 pb-8">
           <div className="flex items-center gap-4">
@@ -119,7 +137,6 @@ export const Home: React.FC = () => {
                 onClick={() => setActiveToolId(tool.id)}
                 className="group relative bg-white/[0.03] p-10 rounded-[3rem] border border-white/10 hover:border-[#D4AF37]/40 cursor-pointer transition-all duration-500 hover:-translate-y-2 shadow-2xl overflow-hidden"
               >
-                {/* Decorative Background Element */}
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#D4AF37]/5 rounded-full blur-3xl group-hover:bg-[#D4AF37]/10 transition-colors" />
                 
                 <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center text-[#D4AF37] mb-8 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 border border-white/5 shadow-xl">
@@ -154,7 +171,6 @@ export const Home: React.FC = () => {
         </div>
       </ToolModal>
 
-      {/* FOOTER BRANDING */}
       <footer className="mt-40 py-12 border-t border-white/5 text-center">
         <p className="text-[10px] font-black uppercase tracking-[1em] text-white/10 italic">
           StrongTools • Institutional Digital Registry
