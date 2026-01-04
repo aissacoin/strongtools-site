@@ -42,13 +42,35 @@
     </script>
     
     <style>
+        /* FORCE ENGLISH NUMBERS GLOBALLY */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            /* This forces tabular/western numerals across all browsers */
+            font-variant-numeric: tabular-nums;
+            -webkit-font-feature-settings: "tnum";
+            font-feature-settings: "tnum";
+        }
+
         body { 
             background-color: #050505; 
             color: white; 
             margin: 0; 
-            font-family: system-ui, -apple-system, sans-serif; 
+            font-family: var(--font-main);
+            /* Prevents automatic number translation in certain regions */
+            unicode-range: U+0030-0039; 
         }
+
         #root { min-height: 100vh; }
+
+        /* Ensure inputs and calculations always use western digits */
+        input, button, span, div {
+            font-family: var(--font-main) !important;
+        }
     </style>
 </head>
 <body>
