@@ -2,7 +2,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { TOOLS } from "./constants";
 
 // === SOVEREIGN API REGISTRY ===
-// Use import.meta.env for Vite environment variables
 const GEMINI_KEY = import.meta.env.VITE_API_KEY || "";
 const OPENROUTER_KEY = import.meta.env.VITE_OPENROUTER_KEY || "";
 const PIXABAY_KEY = "48924033-0c30626359e86566498506253";
@@ -17,7 +16,8 @@ export interface ArchivalRecord {
 }
 
 /**
- * Generates a stable unique ID for the current 12-hour window (YYYY-MM-DD-AM/PM).
+ * Generates a stable unique ID for the current 12-hour window.
+ * This ensures content regenerates twice a day for fresh SEO.
  */
 export const getCycleSeed = (): string => {
   const now = new Date();
@@ -27,11 +27,11 @@ export const getCycleSeed = (): string => {
 };
 
 /**
- * Visual Engine: Fetches high-quality professional imagery from Pixabay.
+ * Visual Engine: Fetches high-fidelity professional imagery.
  */
 export const getPixabayImage = async (query: string): Promise<string | null> => {
   try {
-    const url = `https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(query + ' professional technology')}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3&category=technology`;
+    const url = `https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${encodeURIComponent(query + ' technology luxury')}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3`;
     const response = await fetch(url);
     const data = await response.json();
     return data.hits?.length > 0 ? data.hits[0].largeImageURL : null;
@@ -41,31 +41,34 @@ export const getPixabayImage = async (query: string): Promise<string | null> => 
 };
 
 /**
- * PRIMARY ENGINE: Gemini 3 Pro (1200-word scholarly deep-dive)
+ * PRIMARY ENGINE: Gemini 1.5 Pro
+ * Generates an authoritative, 1200-word scholarly deep-dive.
  */
 const generateMasterManuscript = async (tool: any): Promise<Partial<ArchivalRecord> | null> => {
   if (!GEMINI_KEY) return null;
   
-  // Corrected Class Name: GoogleGenerativeAI
   const genAI = new GoogleGenerativeAI(GEMINI_KEY);
   
-  const systemInstruction = `You are the Chief Technical Historian for StrongTools. Generate a 1200-word scholarly manuscript in semantic HTML (h2, h3, p, strong, ul, li). 
+  const systemInstruction = `You are the Chief Technical Historian for StrongTools. 
+  Generate a comprehensive 1200-word scholarly manuscript in semantic HTML (h2, h3, p, strong, ul, li). 
   FOCUS: Historical evolution, mathematical logic, and advanced professional use cases. 
-  STYLE: Authoritative, deep, and Prestigious. Optimize for Google AdSense 'Helpful Content' guidelines.`;
+  STYLE: Authoritative, academic, and prestigious. 
+  SEO: Optimize for Google 'Helpful Content' guidelines. Avoid AI-typical fluff.`;
   
   const prompt = `Generate a master archival manuscript for the instrument: '${tool.name}'. 
   Context: ${tool.description}. 
-  Mandatory Sections:
-  1. Historical Origins & Evolution
-  2. The Scientific & Logical Foundation
-  3. Advanced Professional Applications
-  4. Future Trajectories in Digital Utility
   
-  Ensure the response is strictly valid HTML content only.`;
+  Mandatory Sections:
+  1. Historical Origins: Trace the roots of this utility from analog to digital.
+  2. Mathematical Framework: Explain the logic and formulas governing the tool.
+  3. Professional Implementation: How industry experts utilize this data.
+  4. Future Trajectories: The role of this utility in the next decade of technology.
+  
+  Return ONLY the HTML content.`;
 
   try {
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-pro", // Standard stable model name
+      model: "gemini-1.5-pro", 
       systemInstruction: systemInstruction 
     });
 
@@ -73,15 +76,20 @@ const generateMasterManuscript = async (tool: any): Promise<Partial<ArchivalReco
     const response = await result.response;
     const text = response.text();
     
-    return { title: `${tool.name}: An Institutional Analysis`, content: text, type: 'MASTER' };
+    return { 
+      title: `${tool.name}: An Institutional Analysis`, 
+      content: text, 
+      type: 'MASTER' 
+    };
   } catch (e) {
-    console.warn("Primary Node Failure. Initiating OpenRouter Failover...", e);
+    console.warn("Primary Node Failure. Failover initiated...", e);
     return null;
   }
 };
 
 /**
- * SECONDARY ENGINE: OpenRouter (600-word professional guide)
+ * SECONDARY ENGINE: OpenRouter (Gemini Flash)
+ * Used as a fallback or for faster responses.
  */
 const generateProGuide = async (tool: any): Promise<Partial<ArchivalRecord> | null> => {
   if (!OPENROUTER_KEY) return null;
@@ -91,13 +99,18 @@ const generateProGuide = async (tool: any): Promise<Partial<ArchivalRecord> | nu
       headers: {
         "Authorization": `Bearer ${OPENROUTER_KEY}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://strongtools.site"
       },
       body: JSON.stringify({
         "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
         "messages": [
-          { "role": "system", "content": "You are a Senior Professional Technical Writer. Generate a 600-word high-quality guide in semantic HTML." },
-          { "role": "user", "content": `Produce a professional technical guide for the instrument: '${tool.name}'. Description: ${tool.description}` }
+          { 
+            "role": "system", 
+            "content": "You are a Senior Technical Writer. Generate a 600-word professional guide in semantic HTML. Style: Concise, informative, and business-ready." 
+          },
+          { 
+            "role": "user", 
+            "content": `Produce a technical guide for: '${tool.name}'. Description: ${tool.description}` 
+          }
         ]
       })
     });
@@ -110,7 +123,7 @@ const generateProGuide = async (tool: any): Promise<Partial<ArchivalRecord> | nu
 };
 
 /**
- * THE AUTOMATOR: Orchestrates zero-touch content generation and local caching.
+ * THE AUTOMATOR: Orchestrates caching and generation.
  */
 export const getAutomatedArchive = async (toolId: string): Promise<ArchivalRecord | null> => {
   const tool = TOOLS.find(t => t.id === toolId);
@@ -143,7 +156,7 @@ export const getAutomatedArchive = async (toolId: string): Promise<ArchivalRecor
       timestamp: Date.now()
     };
 
-    // 3. Cycle Persistence
+    // 3. Persistence
     localStorage.setItem(cacheKey, JSON.stringify(finalRecord));
     return finalRecord;
   }
@@ -151,22 +164,18 @@ export const getAutomatedArchive = async (toolId: string): Promise<ArchivalRecor
   return null;
 };
 
-// --- Legacy Exports for App Compatibility ---
-export const getDailyQuote = async () => ({ quote: "Accuracy is the foundation of digital sovereignty.", author: "StrongTools Archive" });
+// --- Legacy Compatibility Exports ---
+export const getDailyQuote = async () => ({ 
+  quote: "Accuracy is the foundation of digital sovereignty.", 
+  author: "StrongTools Archive" 
+});
+
 export const getOnThisDay = async () => "Archival nodes successfully calibrated for the current meridian.";
+
 export const getDailyChronicles = async () => [];
+
 export const getDetailedArticle = async (id: string) => getAutomatedArchive(id);
-export const getCycleMetadata = (initialDate?: string) => ({ cycleString: initialDate || getCycleSeed() });
-export const getArchivedContent = async (id: string, name: string, desc: string) => {
-  const archive = await getAutomatedArchive(id);
-  if (!archive) return null;
-  return {
-    articleTitle: archive.title,
-    mainContent: archive.content,
-    history: `This instrument, ${name}, has been indexed into the sovereign registry for the cycle ${archive.cycle}.`,
-    faqs: [
-      { question: `What defines the utility of ${name}?`, answer: desc },
-      { question: "Is the logic verified?", answer: "Yes, our scribes ensure mathematical precision across all nodes." }
-    ]
-  };
-};
+
+export const getCycleMetadata = (initialDate?: string) => ({ 
+  cycleString: initialDate || getCycleSeed() 
+});
