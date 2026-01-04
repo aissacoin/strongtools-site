@@ -1,89 +1,34 @@
-import { 
-  Shield, 
-  Zap, 
-  Code, 
-  Globe, 
-  Smartphone, 
-  Lock, 
-  Calculator, 
-  UserPlus, 
-  CloudSun, 
-  FileText 
-} from 'lucide-react';
+import { Tool, ToolCategory } from './types';
 
-export const TOOLS = [
-  {
-    id: 'bmi-calculator',
-    title: 'Body Composition Index',
-    description: 'Precision analysis of body mass parameters using advanced clinical metrics.',
-    category: 'utility',
-    icon: 'Calculator',
-    path: '/tool/bmi-calculator'
+export const TOOLS: Tool[] = [
+  { 
+    id: 'bmi-calc', 
+    name: 'Biological Index', 
+    description: 'Precision body mass analysis.', 
+    category: ToolCategory.PRODUCTIVITY, 
+    icon: 'Activity',
+    thumbnail: 'https://images.unsplash.com/photo-1591336398274-9f9173455b5b?q=80&w=1200'
   },
-  {
-    id: 'age-calculator',
-    title: 'Temporal Chronometer',
-    description: 'Calculate precise age metrics down to seconds for archival and registry purposes.',
-    category: 'utility',
-    icon: 'UserPlus',
-    path: '/tool/age-calculator'
+  { 
+    id: 'age-calc', 
+    name: 'Temporal Chronometer', 
+    description: 'Exact biological age tracking.', 
+    category: ToolCategory.TIME, 
+    icon: 'UserCheck',
+    thumbnail: 'https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=1200'
   },
-  {
-    id: 'password-forge',
-    title: 'Password Forge',
-    description: 'Generate military-grade encrypted strings for high-security digital vaults.',
-    category: 'security',
-    icon: 'Lock',
-    path: '/tool/password-forge'
-  },
-  {
-    id: 'weather-live',
-    title: 'Atmospheric Pulse',
-    description: 'Real-time global meteorological data synchronized with satellite feeds.',
-    category: 'web',
+  { 
+    id: 'weather-live', 
+    name: 'Atmospheric Pulse', 
+    description: 'Real-time global weather sync.', 
+    category: ToolCategory.KNOWLEDGE, 
     icon: 'CloudSun',
-    path: '/tool/weather-live'
-  },
-  {
-    id: 'word-counter',
-    title: 'Manuscript Analyzer',
-    description: 'Detailed linguistic breakdown of text structure, word count, and density.',
-    category: 'design',
-    icon: 'FileText',
-    path: '/tool/word-counter'
-  },
-  {
-    id: 'birth-watch',
-    title: 'Birth Watch Protocol',
-    description: 'Sophisticated tracking of gestational timelines and developmental milestones.',
-    category: 'utility',
-    icon: 'Zap',
-    path: '/tool/birth-watch'
+    thumbnail: 'https://images.unsplash.com/photo-1592210633466-3b5bd94848cc?q=80&w=1200'
   }
 ];
 
-export const CATEGORIES = [
-  { id: 'all', label: 'All Instruments', icon: 'Globe' },
-  { id: 'security', label: 'Security Vault', icon: 'Shield' },
-  { id: 'utility', label: 'Utility Engines', icon: 'Zap' },
-  { id: 'coding', label: 'Logic & Code', icon: 'Code' },
-  { id: 'web', label: 'Network Tools', icon: 'Globe' },
-  { id: 'design', label: 'Creative Suite', icon: 'Smartphone' }
-];
-
-export const BLOG_POSTS = [
-  {
-    id: 'digital-sovereignty',
-    title: 'The Era of Data Sovereignty',
-    excerpt: 'Exploring the shift towards local-first data processing and user-owned digital identities.',
-    date: '2024-05-20',
-    category: 'security'
-  },
-  {
-    id: 'ai-utility-evolution',
-    title: 'AI and the Future of Utilities',
-    excerpt: 'How generative models are transforming simple calculators into intelligent advisors.',
-    date: '2024-05-18',
-    category: 'coding'
-  }
+export const NAV_LINKS = [
+  { name: 'Home', href: '#/' },
+  { name: 'Vault', href: '#/tools' },
+  { name: 'Contact', href: '#/contact' },
 ];
